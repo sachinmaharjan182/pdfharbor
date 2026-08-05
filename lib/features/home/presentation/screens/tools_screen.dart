@@ -73,12 +73,12 @@ class ToolsScreen extends StatelessWidget {
     _ToolGroup('Convert', [
       _Tool(Icons.image_rounded, 'Image to PDF', route: AppRoutes.imageToPdf),
       _Tool(Icons.collections_rounded, 'PDF to Images', route: AppRoutes.pdfToImage),
-      _Tool(Icons.document_scanner_rounded, 'Scan Document'),
+      _Tool(Icons.document_scanner_rounded, 'Scan Document', route: AppRoutes.scanner),
     ]),
     _ToolGroup('Edit & Protect', [
-      _Tool(Icons.water_drop_rounded, 'Watermark'),
-      _Tool(Icons.draw_rounded, 'Signature'),
-      _Tool(Icons.lock_rounded, 'Password Protect'),
+      _Tool(Icons.water_drop_rounded, 'Watermark', route: AppRoutes.watermark),
+      _Tool(Icons.draw_rounded, 'Signature', route: AppRoutes.signature),
+      _Tool(Icons.lock_rounded, 'Password Protect', route: AppRoutes.security),
     ]),
   ];
 }

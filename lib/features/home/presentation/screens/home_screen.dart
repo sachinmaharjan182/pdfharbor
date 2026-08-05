@@ -120,14 +120,14 @@ class HomeScreen extends ConsumerWidget {
     _QuickAction(
       Icons.document_scanner_rounded,
       'Scan Document',
-      (c) => c.showComingSoon('Document Scanner'),
+      (c) => c.push(AppRoutes.scanner),
     ),
     _QuickAction(Icons.image_rounded, 'Image to PDF', (c) => c.push(AppRoutes.imageToPdf)),
     _QuickAction(Icons.call_merge_rounded, 'Merge PDF', (c) => c.push(AppRoutes.merge)),
     _QuickAction(Icons.call_split_rounded, 'Split PDF', (c) => c.push(AppRoutes.split)),
     _QuickAction(Icons.compress_rounded, 'Compress PDF', (c) => c.push(AppRoutes.compress)),
-    _QuickAction(Icons.water_drop_rounded, 'Watermark', (c) => c.showComingSoon('Watermark')),
-    _QuickAction(Icons.draw_rounded, 'Signature', (c) => c.showComingSoon('Signature')),
+    _QuickAction(Icons.water_drop_rounded, 'Watermark', (c) => c.push(AppRoutes.watermark)),
+    _QuickAction(Icons.draw_rounded, 'Signature', (c) => c.push(AppRoutes.signature)),
   ];
 }
 

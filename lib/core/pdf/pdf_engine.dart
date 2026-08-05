@@ -47,6 +47,29 @@ class BuildFromImagesRequest {
   final List<PdfImagePage> pages;
 }
 
+/// Arguments for [PdfEngine.setPassword].
+class SetPasswordRequest {
+  const SetPasswordRequest({
+    required this.source,
+    required this.newPassword,
+    this.currentPassword,
+  });
+
+  final Uint8List source;
+
+  /// Empty string removes protection.
+  final String newPassword;
+
+  /// Required when [source] is already encrypted.
+  final String? currentPassword;
+}
+
+/// Raised by the password isolate when the supplied password is rejected,
+/// so the caller can distinguish it from a corrupt file.
+class WrongPasswordException implements Exception {
+  const WrongPasswordException();
+}
+
 /// Pure-Dart PDF operations built on Syncfusion, run off the UI thread.
 ///
 /// Syncfusion has no page-import API in this version, so pages are copied
@@ -74,7 +97,62 @@ abstract final class PdfEngine {
   /// Page dimensions in points for every page, used to size rasterized
   /// output so a compressed document keeps its original page geometry.
   static Future<List<Size>> pageSizes(Uint8List bytes) => compute(_pageSizesIsolate, bytes);
+
+  /// Adds, changes, or (with an empty `newPassword`) removes encryption.
+  /// Throws [WrongPasswordException] if `currentPassword` is rejected.
+  static Future<Uint8List> setPassword(SetPasswordRequest request) {
+    return compute(_setPasswordIsolate, request);
+  }
+
+  /// Whether the document requires a password to open.
+  static Future<bool> isEncrypted(Uint8List bytes) => compute(_isEncryptedIsolate, bytes);
 }
+
+Uint8List _setPasswordIsolate(SetPasswordRequest request) {
+  final PdfDocument document;
+  try {
+    document = PdfDocument(
+      inputBytes: request.source,
+      password: request.currentPassword,
+    );
+  } on Exception catch (e) {
+    if (_isPasswordError(e)) throw const WrongPasswordException();
+    rethrow;
+  }
+
+  try {
+    final security = document.security;
+    if (request.newPassword.isEmpty) {
+      // Clearing both passwords drops encryption from the saved copy.
+      security.userPassword = '';
+      security.ownerPassword = '';
+    } else {
+      security.algorithm = PdfEncryptionAlgorithm.aesx256Bit;
+      security.userPassword = request.newPassword;
+      security.ownerPassword = request.newPassword;
+    }
+    return Uint8List.fromList(document.saveSync());
+  } finally {
+    document.dispose();
+  }
+}
+
+bool _isEncryptedIsolate(Uint8List bytes) {
+  PdfDocument? document;
+  try {
+    document = PdfDocument(inputBytes: bytes);
+    return false;
+  } on Exception catch (e) {
+    if (_isPasswordError(e)) return true;
+    rethrow;
+  } finally {
+    document?.dispose();
+  }
+}
+
+/// Syncfusion reports a wrong/missing password by throwing with a message
+/// mentioning it, rather than via a typed exception.
+bool _isPasswordError(Exception e) => e.toString().toLowerCase().contains('password');
 
 Uint8List _buildFromImagesIsolate(BuildFromImagesRequest request) {
   final document = PdfDocument();

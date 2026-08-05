@@ -8,9 +8,13 @@ import '../../features/home/presentation/screens/tools_screen.dart';
 import '../../features/image_to_pdf/presentation/screens/image_to_pdf_screen.dart';
 import '../../features/merge/presentation/screens/merge_screen.dart';
 import '../../features/pdf_to_image/presentation/screens/pdf_to_image_screen.dart';
+import '../../features/scanner/presentation/screens/scanner_screen.dart';
+import '../../features/security/presentation/screens/security_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
+import '../../features/signature/presentation/screens/signature_screen.dart';
 import '../../features/split/presentation/screens/split_screen.dart';
 import '../../features/viewer/presentation/screens/viewer_screen.dart';
+import '../../features/watermark/presentation/screens/watermark_screen.dart';
 import 'app_shell.dart';
 import 'shared_axis_page.dart';
 
@@ -27,6 +31,10 @@ abstract final class AppRoutes {
   static const String compress = '/compress';
   static const String imageToPdf = '/image-to-pdf';
   static const String pdfToImage = '/pdf-to-image';
+  static const String scanner = '/scanner';
+  static const String watermark = '/watermark';
+  static const String signature = '/signature';
+  static const String security = '/security';
 
   /// The viewer takes the document path as a query parameter so a file can
   /// be opened from any tab without threading arguments through the shell.
@@ -118,6 +126,30 @@ final appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       pageBuilder: (context, state) =>
           sharedAxisPage(key: state.pageKey, child: const PdfToImageScreen()),
+    ),
+    GoRoute(
+      path: AppRoutes.scanner,
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          sharedAxisPage(key: state.pageKey, child: const ScannerScreen()),
+    ),
+    GoRoute(
+      path: AppRoutes.watermark,
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          sharedAxisPage(key: state.pageKey, child: const WatermarkScreen()),
+    ),
+    GoRoute(
+      path: AppRoutes.signature,
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          sharedAxisPage(key: state.pageKey, child: const SignatureScreen()),
+    ),
+    GoRoute(
+      path: AppRoutes.security,
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          sharedAxisPage(key: state.pageKey, child: const SecurityScreen()),
     ),
   ],
 );

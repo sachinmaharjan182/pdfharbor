@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/permissions/permission_service.dart';
 import '../../../../core/utils/context_extensions.dart';
+import '../../../../shared/navigation/app_router.dart';
 import '../../../../shared/widgets/app_dialogs.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/error_view.dart';
@@ -254,7 +256,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
   }
 
   void _openFile(BuildContext context, PdfFileEntry entry) {
-    context.showComingSoon('The PDF Viewer');
+    context.push(AppRoutes.viewerFor(entry.path));
   }
 
   Future<void> _toggleFavorite(PdfFileEntry entry) async {

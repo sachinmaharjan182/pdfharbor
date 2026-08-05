@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/utils/context_extensions.dart';
+import '../../../../core/utils/pdf_picker.dart';
+import '../../../../shared/navigation/app_router.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/loading_skeleton.dart';
 import '../../../../shared/widgets/section_header.dart';
@@ -107,8 +109,14 @@ class HomeScreen extends ConsumerWidget {
     context.go('/files');
   }
 
+  static Future<void> _openPdfFromPicker(BuildContext context) async {
+    final path = await PdfPicker.pickSingle();
+    if (path == null || !context.mounted) return;
+    await context.push(AppRoutes.viewerFor(path));
+  }
+
   static final List<_QuickAction> _quickActions = [
-    _QuickAction(Icons.picture_as_pdf_rounded, 'Open PDF', (c) => c.showComingSoon('Open PDF')),
+    const _QuickAction(Icons.picture_as_pdf_rounded, 'Open PDF', _openPdfFromPicker),
     _QuickAction(
       Icons.document_scanner_rounded,
       'Scan Document',
@@ -235,7 +243,7 @@ class _RecentFilesRail extends ConsumerWidget {
               return PdfFileGridCard(
                 width: 140,
                 entry: entry,
-                onTap: () => context.showComingSoon('The PDF Viewer'),
+                onTap: () => context.push(AppRoutes.viewerFor(entry.path)),
                 onFavoriteToggle: () async {
                   final result = await ref.read(toggleFavoriteUseCaseProvider).call(entry.path);
                   result.fold((_) => invalidateFilesProviders(ref), (failure) {

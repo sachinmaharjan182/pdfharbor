@@ -27,7 +27,9 @@ Full spec: `app_requirements.txt`. Architecture/plan: `/home/dell/.claude/plans/
   - **Settings:** theme (System/Light/Dark), default page view, default compression, language, rate/privacy/version — persisted to Hive, generic `RadioGroup` option bottom sheet.
   - Quick-action / tool cards for features not yet built call `context.showComingSoon(...)` (a real snackbar) rather than silently no-oping — replace each with real navigation as its phase lands.
   - **Verified:** `flutter analyze` clean, `flutter test` 15/15 passing (Result/Failure, file-size + relative-date extensions), **`flutter build apk --debug` succeeds**.
-- [ ] **Phase 3 — Viewer.** Open, search text, jump to page, bookmarks, recent files, continuous/horizontal scroll, thumbnails, zoom, share, print, PDF info.
+- [x] **Phase 3 — Viewer.** `SfPdfViewer.file`-based reader at route `/viewer?path=<encoded>` (outside the nav shell, so it's full-screen). Covers: open from Files / recent rail / Home's "Open PDF" picker, in-document text search with match counter + next/previous, jump-to-page dialog, user bookmarks (Hive-persisted, add/list/jump/delete via `PdfBookmarkEntry`), continuous↔horizontal scroll toggle seeded from the saved default-page-view setting, lazy page-thumbnail grid, zoom in/out clamped to the viewer's 1-3x range, share, print (`Printing.layoutPdf`), and a PDF-information sheet reading the document-info dictionary. Password-protected files prompt inline and reload via a password-keyed widget key. Opening a document records it into Recent Files.
+  - Notable: `PageThumbnailsSheet` serializes renders through a single future chain — Android's PDF renderer rejects concurrent page renders on one document handle.
+  - Added shared `PdfPicker` (`core/utils/pdf_picker.dart`) for PDF file selection; merge/split/compress should reuse it.
 - [ ] **Phase 4 — Merge & Split.**
 - [ ] **Phase 5 — Compress & Image↔PDF.**
 - [ ] **Phase 6 — Scanner, Watermark, Signature, Password.**

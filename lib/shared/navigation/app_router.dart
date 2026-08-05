@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../../features/files/presentation/screens/files_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/home/presentation/screens/tools_screen.dart';
+import '../../features/merge/presentation/screens/merge_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
+import '../../features/split/presentation/screens/split_screen.dart';
 import '../../features/viewer/presentation/screens/viewer_screen.dart';
 import 'app_shell.dart';
 import 'shared_axis_page.dart';
@@ -17,6 +19,8 @@ abstract final class AppRoutes {
   static const String tools = '/tools';
   static const String settings = '/settings';
   static const String viewer = '/viewer';
+  static const String merge = '/merge';
+  static const String split = '/split';
 
   /// The viewer takes the document path as a query parameter so a file can
   /// be opened from any tab without threading arguments through the shell.
@@ -78,6 +82,18 @@ final appRouter = GoRouter(
           child: ViewerScreen(path: path),
         );
       },
+    ),
+    GoRoute(
+      path: AppRoutes.merge,
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          sharedAxisPage(key: state.pageKey, child: const MergeScreen()),
+    ),
+    GoRoute(
+      path: AppRoutes.split,
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          sharedAxisPage(key: state.pageKey, child: const SplitScreen()),
     ),
   ],
 );

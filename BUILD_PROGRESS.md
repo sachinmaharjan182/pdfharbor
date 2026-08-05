@@ -30,7 +30,14 @@ Full spec: `app_requirements.txt`. Architecture/plan: `/home/dell/.claude/plans/
 - [x] **Phase 3 — Viewer.** `SfPdfViewer.file`-based reader at route `/viewer?path=<encoded>` (outside the nav shell, so it's full-screen). Covers: open from Files / recent rail / Home's "Open PDF" picker, in-document text search with match counter + next/previous, jump-to-page dialog, user bookmarks (Hive-persisted, add/list/jump/delete via `PdfBookmarkEntry`), continuous↔horizontal scroll toggle seeded from the saved default-page-view setting, lazy page-thumbnail grid, zoom in/out clamped to the viewer's 1-3x range, share, print (`Printing.layoutPdf`), and a PDF-information sheet reading the document-info dictionary. Password-protected files prompt inline and reload via a password-keyed widget key. Opening a document records it into Recent Files.
   - Notable: `PageThumbnailsSheet` serializes renders through a single future chain — Android's PDF renderer rejects concurrent page renders on one document handle.
   - Added shared `PdfPicker` (`core/utils/pdf_picker.dart`) for PDF file selection; merge/split/compress should reuse it.
-- [ ] **Phase 4 — Merge & Split.**
+- [x] **Phase 4 — Merge & Split.** Both routed outside the nav shell (`/merge`, `/split`), reachable from Home quick actions and the Tools screen.
+  - **Shared infra added here (reuse it for compress/watermark):**
+    - `core/pdf/pdf_engine.dart` — Syncfusion operations run off the UI thread via `compute`. **This version of `syncfusion_flutter_pdf` has no page-import API**, so pages are copied with `createTemplate()` + `drawPdfTemplate`, sizing each destination page to the source page so dimensions/orientation survive. Exposes `merge`, `extractPages`, `pageCount`.
+    - `core/utils/output_file_service.dart` — writes results to `Documents/PDFverse` (falls back to app-private storage), auto-suffixing ` (2)`, ` (3)`… so a run never silently overwrites an earlier result.
+    - `shared/widgets/result_success_sheet.dart` — the standard "saved → open/share" ending for every tool.
+  - **Merge:** multi-select via `PdfPicker`, drag-to-reorder (`ReorderableListView`, output order = list order), per-item remove, thumbnails, save-as dialog, progress bar, requires ≥2 files.
+  - **Split:** modes are every-page / page-range / odd / even / custom (`1,3,5-8`), with a live result preview and inline validation. Page-selection parsing (`parse_page_selection.dart`) and mode→page-group mapping (`build_page_groups.dart`) are pure functions with **34 unit tests total** covering reversed ranges, dedup, whitespace, and out-of-bounds rejection.
+  - **Verified:** `flutter analyze` clean, `flutter test` 34/34 passing, `flutter build apk --debug` succeeds.
 - [ ] **Phase 5 — Compress & Image↔PDF.**
 - [ ] **Phase 6 — Scanner, Watermark, Signature, Password.**
 - [ ] **Phase 7 — Polish & QA.** Share integrations, shimmer/animation pass, empty/error state audit, `flutter analyze` clean, V2 extension notes.

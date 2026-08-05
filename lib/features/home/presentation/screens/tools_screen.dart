@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/utils/context_extensions.dart';
+import '../../../../shared/navigation/app_router.dart';
 import '../../../../shared/widgets/app_card.dart';
 
 /// Full catalogue of PDF tools. Home shows a curated subset as quick
@@ -50,7 +52,9 @@ class ToolsScreen extends StatelessWidget {
                 return ActionCard(
                   icon: tool.icon,
                   label: tool.label,
-                  onTap: () => context.showComingSoon(tool.label),
+                  onTap: () => tool.route != null
+                      ? context.push(tool.route!)
+                      : context.showComingSoon(tool.label),
                 ).animate().fadeIn(delay: (40 * index).ms).slideY(begin: 0.08, end: 0);
               },
             ),
@@ -62,8 +66,8 @@ class ToolsScreen extends StatelessWidget {
 
   static const List<_ToolGroup> _toolGroups = [
     _ToolGroup('Organize', [
-      _Tool(Icons.call_merge_rounded, 'Merge PDF'),
-      _Tool(Icons.call_split_rounded, 'Split PDF'),
+      _Tool(Icons.call_merge_rounded, 'Merge PDF', route: AppRoutes.merge),
+      _Tool(Icons.call_split_rounded, 'Split PDF', route: AppRoutes.split),
       _Tool(Icons.compress_rounded, 'Compress PDF'),
     ]),
     _ToolGroup('Convert', [
@@ -87,8 +91,12 @@ class _ToolGroup {
 }
 
 class _Tool {
-  const _Tool(this.icon, this.label);
+  const _Tool(this.icon, this.label, {this.route});
 
   final IconData icon;
   final String label;
+
+  /// Null until the tool's feature phase lands; those cards show a
+  /// "coming soon" snackbar instead of navigating.
+  final String? route;
 }

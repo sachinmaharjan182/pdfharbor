@@ -11,14 +11,15 @@ Full spec: `app_requirements.txt`. Architecture/plan: `/home/dell/.claude/plans/
 - **Scanner:** `cunning_document_scanner` (Android ML Kit Document Scanner wrapper).
 - **State mgmt:** plain Riverpod (`flutter_riverpod`, `Notifier`/`AsyncNotifier`), **no riverpod_generator** — kept simple to minimize build_runner surface.
 - **Models:** `freezed` + `json_serializable`.
-- **Hive:** manual `TypeAdapter`s, **no `hive_generator`** — it conflicts with freezed's analyzer version constraint (verified during Phase 0; do not re-add hive_generator without re-checking this).
+- **Hive:** boxes store plain `Map<dynamic, dynamic>` (via each model's `toJson()`/`fromJson()`), **no `hive_generator`/`TypeAdapter`s** — hive_generator conflicts with freezed's analyzer version constraint (verified during Phase 0; do not re-add it without re-checking this). See `lib/core/hive/hive_service.dart`.
 - **App identity:** applicationId/namespace `com.pdfverse.app`, minSdk 23, package folder `android/app/src/main/kotlin/com/pdfverse/app/`.
 - Android-only project (`flutter create --platforms=android`).
 
 ## Phase checklist
 
 - [x] **Phase 0 — Bootstrap.** `flutter create`, full pubspec (all deps resolved OK), Android manifest permissions (camera/storage/media/notifications), Gradle (minSdk 23, core library desugaring, multidex), analysis_options.yaml (strict lints), feature-first folder skeleton under `lib/`, git initialized, this file created.
-- [ ] **Phase 1 — Core & shell.** Error/Result types, Hive boxes + manual adapters, Material 3 theme (light/dark + dynamic color), GoRouter shell (bottom nav: Home/Files/Tools/Settings) + shared-axis transitions, shared widget kit (AppCard, EmptyState, Shimmer skeleton, ConfirmDialog, ErrorView, BottomSheets), permission service.
+- [x] **Phase 1a — Core infra & shared widgets.** `Failure`/`Result<T>` error types (`core/error/`), constants (`core/constants/app_constants.dart`: spacing/radius/durations/Hive box names), utils (file-size + relative-date formatting, `BuildContext` extensions), `HiveService` (Map-based boxes, no codegen), `PermissionService` (camera/photos/manage-external-storage with granted/denied/permanently-denied result), Material 3 `AppTheme` (light/dark, dynamic-color-ready via `dynamic_color`'s `harmonized()`, 20-28 corner radii, large type scale), shared-axis GoRouter page transition helper, shared widget kit (`AppCard`/`ActionCard`, `EmptyState`, `ErrorView`, shimmer skeletons, `SectionHeader`, bottom-sheet + dialog helpers). `flutter analyze`: clean.
+- [ ] **Phase 1b — App shell.** GoRouter config wiring Home/Files/Tools/Settings behind a bottom-nav `StatefulShellRoute`, `main.dart` wired with `ProviderScope` + `HiveService.init()` + `DynamicColorBuilder` + `AppTheme`. Deferred to land together with Phase 2's real screens so the shell never routes to a placeholder.
 - [ ] **Phase 2 — Home / Files / Settings.** Home (header, search, recent files, quick-actions grid — cards added only as their target feature goes live), File Manager (list/grid, sort, search, favorites), Settings (theme, defaults, about/rate/privacy/version).
 - [ ] **Phase 3 — Viewer.** Open, search text, jump to page, bookmarks, recent files, continuous/horizontal scroll, thumbnails, zoom, share, print, PDF info.
 - [ ] **Phase 4 — Merge & Split.**

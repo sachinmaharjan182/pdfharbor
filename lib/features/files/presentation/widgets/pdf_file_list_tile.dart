@@ -20,12 +20,16 @@ class PdfFileListTile extends StatelessWidget {
     required this.onFavoriteToggle,
     required this.onAction,
     super.key,
+    this.heroTag,
   });
 
   final PdfFileEntry entry;
   final VoidCallback onTap;
   final VoidCallback onFavoriteToggle;
   final ValueChanged<PdfFileAction> onAction;
+
+  /// Optional Hero tag so the thumbnail animates into the viewer.
+  final Object? heroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +46,7 @@ class PdfFileListTile extends StatelessWidget {
             width: 48,
             height: 60,
             borderRadius: BorderRadius.circular(AppRadius.small),
+            heroTag: heroTag,
           ),
           const SizedBox(width: AppSpacing.lg),
           Expanded(

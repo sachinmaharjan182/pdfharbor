@@ -12,6 +12,7 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/utils/context_extensions.dart';
 import '../../../../shared/widgets/app_bottom_sheet.dart';
 import '../../../files/presentation/providers/files_providers.dart';
+import '../../../files/presentation/widgets/pdf_thumbnail.dart';
 import '../../../settings/domain/entities/app_settings.dart';
 import '../../../settings/presentation/providers/settings_providers.dart';
 import '../../domain/entities/pdf_bookmark.dart';
@@ -63,8 +64,34 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _isSearching ? _buildSearchAppBar() : _buildDefaultAppBar(),
-      body: _loadError != null ? _buildErrorBody() : _buildViewer(),
+      body: _loadError != null ? _buildErrorBody() : _buildBody(),
       bottomNavigationBar: _documentLoaded && !_isSearching ? _buildBottomBar() : null,
+    );
+  }
+
+  Widget _buildBody() {
+    return Stack(
+      children: [
+        _buildViewer(),
+        // Gives the incoming Hero somewhere to land: the file's thumbnail
+        // fills the screen while the real viewer parses the document, then
+        // fades out. Without it the flight would end on empty space.
+        if (!_documentLoaded)
+          Positioned.fill(
+            child: IgnorePointer(
+              child: ColoredBox(
+                color: context.colorScheme.surface,
+                child: Center(
+                  child: PdfThumbnail(
+                    path: widget.path,
+                    heroTag: 'file-${widget.path}',
+                    borderRadius: BorderRadius.circular(AppRadius.medium),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 

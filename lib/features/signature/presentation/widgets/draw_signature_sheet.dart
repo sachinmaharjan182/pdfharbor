@@ -19,6 +19,9 @@ class _DrawSignatureSheetState extends State<DrawSignatureSheet> {
   late SignatureController _controller;
   Color _penColor = Colors.black;
 
+  /// Ink colors are document content, not UI chrome — they must look the
+  /// same on the exported PDF regardless of the app's theme, so these are
+  /// intentionally literal rather than drawn from the color scheme.
   static const List<Color> _penColors = [Colors.black, Color(0xFF1E3A8A), Color(0xFF7F1D1D)];
 
   @override

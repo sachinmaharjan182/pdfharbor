@@ -78,6 +78,8 @@ class _FavoriteBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Deliberately theme-independent: this scrim sits on top of arbitrary
+    // page artwork, so it needs fixed contrast rather than scheme colors.
     return Material(
       color: Colors.black.withValues(alpha: 0.45),
       shape: const CircleBorder(),

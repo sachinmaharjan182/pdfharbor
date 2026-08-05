@@ -15,6 +15,9 @@ import '../../../../shared/widgets/loading_skeleton.dart';
 /// [width]/[height] are the *layout* size (null lets the parent decide, e.g.
 /// via `Expanded`/`AspectRatio`); the bitmap itself is always rasterized at
 /// a fixed resolution independent of layout size.
+///
+/// Set [heroTag] to animate this thumbnail into the destination screen.
+/// Tags must be unique per route, so only tag one thumbnail per file.
 class PdfThumbnail extends StatefulWidget {
   const PdfThumbnail({
     required this.path,
@@ -22,12 +25,14 @@ class PdfThumbnail extends StatefulWidget {
     this.width,
     this.height,
     this.borderRadius,
+    this.heroTag,
   });
 
   final String path;
   final double? width;
   final double? height;
   final BorderRadius? borderRadius;
+  final Object? heroTag;
 
   @override
   State<PdfThumbnail> createState() => _PdfThumbnailState();
@@ -96,9 +101,14 @@ class _PdfThumbnailState extends State<PdfThumbnail> {
       );
     }
 
-    return ClipRRect(
+    final thumbnail = ClipRRect(
       borderRadius: radius,
       child: SizedBox(width: widget.width, height: widget.height, child: content),
     );
+
+    if (widget.heroTag case final tag?) {
+      return Hero(tag: tag, child: thumbnail);
+    }
+    return thumbnail;
   }
 }

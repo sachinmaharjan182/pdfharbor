@@ -52,7 +52,23 @@ Full spec: `app_requirements.txt`. Architecture/plan: `/home/dell/.claude/plans/
   - **Signature:** draw pad (pen colour changes rebuild the controller and replay strokes — `SignatureController`'s pen colour is fixed at construction), import from gallery, signatures persisted to Hive with PNGs in app-private storage (entries whose file vanished are filtered out), placement by page + fractional X/Y + size + rotation with live preview. Fractional coordinates mean a placement survives any page size.
   - **Password:** AES-256 encrypt, decrypt with validation, encrypted-state detection. Syncfusion signals a wrong password by throwing with "password" in the message rather than a typed exception — `WrongPasswordException` normalizes this so callers can distinguish it from a corrupt file. Originals are never modified; a new copy is always written.
   - **Verified:** `flutter analyze` clean, `flutter test` 59/59 passing, `flutter build apk --debug` succeeds.
-- [ ] **Phase 7 — Polish & QA.** Share integrations, shimmer/animation pass, empty/error state audit, `flutter analyze` clean, V2 extension notes.
+- [x] **Phase 7 — Polish & QA.** V1 complete.
+  - Hero animation: a file's thumbnail flies from the Files list into the viewer, which holds a matching Hero as its loading state so the flight lands on content rather than empty space. Only the list view tags thumbnails — Hero tags must be unique per route and the grid renders the same files.
+  - Tablet responsiveness: Files grid now matches Home/Tools at 4 columns on tablets.
+  - Hardcoded-color audit: only two remain and both are deliberate and commented — the favorite badge scrim (sits over arbitrary page artwork, needs fixed contrast) and signature ink colors (document content, must not follow the app theme).
+  - Verified all 14 screens are reachable from the router; no dead screens, no `TODO`/`FIXME`, no `print`.
+  - `README.md` rewritten: features, architecture, conventions, the non-obvious library constraints, and concrete V2 extension seams (OCR, AI summary/chat, cloud sync, Office conversion).
+
+## Status: V1 COMPLETE
+
+All 12 spec features are implemented and reachable. Final verification: `flutter analyze` clean · `flutter test` 59/59 passing · `flutter build apk --debug` succeeds.
+
+### Known gaps / deliberate deviations
+
+- **App language** (Settings) is the single remaining `showComingSoon` — no localization was in scope for V1. Adding it means wiring `flutter_localizations` + ARB files; the setting tile is already there.
+- **Compression rasterizes pages**, losing selectable text. This is a real limitation of re-encoding without a content-stream-level image API. The UI discloses it before the user commits.
+- **No widget/integration tests.** Unit tests cover the pure logic where correctness matters (parsing, page-group math, layout resolution, compression math, Result/Failure). Screen behavior has not been verified on a device by an automated test — a real-device smoke pass is still worth doing.
+- **`MANAGE_EXTERNAL_STORAGE`** is declared so the file browser can list PDFs device-wide. Google Play requires justification for this permission at submission; if it's rejected, fall back to a Storage Access Framework folder picker (`FilesRepository` is an interface, so only the datasource changes).
 
 ## Notes for whoever (or whatever session) resumes next
 

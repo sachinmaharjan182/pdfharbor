@@ -215,8 +215,8 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
                     AppSpacing.lg,
                     AppSpacing.xxxl,
                   ),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: context.isTablet ? 4 : 2,
                     crossAxisSpacing: AppSpacing.lg,
                     mainAxisSpacing: AppSpacing.lg,
                     childAspectRatio: 0.68,
@@ -236,6 +236,9 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
   Widget _buildListTile(BuildContext context, PdfFileEntry entry) {
     return PdfFileListTile(
       entry: entry,
+      // Only the list view tags its thumbnails; a Hero tag must be unique
+      // per route, and the grid renders the same files.
+      heroTag: 'file-${entry.path}',
       onTap: () => _openFile(context, entry),
       onFavoriteToggle: () => _toggleFavorite(entry),
       onAction: (action) => _handleAction(context, entry, action),

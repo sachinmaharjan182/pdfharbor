@@ -1,0 +1,537 @@
+You are an expert Flutter developer, UX designer, and software architect.
+
+Build a production-ready Android application called "PDFverse".
+
+The goal is to create a premium-quality PDF utility app similar to Adobe Acrobat, iLovePDF, Smallpdf, and Xodo, but with a much cleaner, modern Material 3 interface.
+
+The application must be scalable, maintainable, and follow Flutter best practices.
+
+--------------------------------------------------
+TECH STACK
+--------------------------------------------------
+
+Flutter (latest stable)
+
+State Management:
+- Riverpod
+
+Navigation:
+- GoRouter
+
+Architecture:
+- Clean Architecture
+- Feature-first folder structure
+
+Local Storage:
+- Hive
+
+Dependency Injection:
+- Riverpod Providers
+
+Theme:
+- Material 3
+- Dynamic Color (Android 12+)
+- Light & Dark Mode
+
+Animations:
+- Flutter Animate
+- Hero animations
+- Shared axis transitions
+- Smooth page transitions
+
+Responsive:
+- Phone
+- Tablet
+
+--------------------------------------------------
+DESIGN GOALS
+--------------------------------------------------
+
+The app should feel like a premium Google application.
+
+Style:
+
+• Material You
+• Rounded corners (20-28)
+• Beautiful cards
+• Soft shadows
+• Smooth animations
+• Large typography
+• Lots of white space
+• Minimal icons
+• Premium appearance
+
+Never make the UI look cluttered.
+
+Use proper empty states.
+
+Use illustrations where appropriate.
+
+--------------------------------------------------
+HOME SCREEN
+--------------------------------------------------
+
+Instead of showing a long list, create beautiful action cards.
+
+Header:
+
+Hello
+PDF Toolkit
+
+Search bar
+
+Recent Files horizontal list
+
+Quick Actions Grid
+
+Cards:
+
+📖 Open PDF
+
+📷 Scan Document
+
+🖼 Image to PDF
+
+🔗 Merge PDF
+
+✂ Split PDF
+
+📉 Compress PDF
+
+✍ Watermark
+
+✒ Signature
+
+Bottom Navigation
+
+Home
+
+Files
+
+Tools
+
+Settings
+
+--------------------------------------------------
+VERSION 1 FEATURES
+--------------------------------------------------
+
+Implement all of these.
+
+1. PDF Viewer
+
+Features:
+
+Open local PDF
+
+Search text
+
+Jump to page
+
+Bookmark page
+
+Recent files
+
+Dark mode
+
+Continuous scrolling
+
+Horizontal mode
+
+Page thumbnails
+
+Zoom
+
+Share
+
+Print
+
+PDF Information
+
+2. Merge PDFs
+
+Select multiple PDFs
+
+Reorder
+
+Remove
+
+Merge
+
+Save As
+
+Progress indicator
+
+3. Split PDF
+
+Split by:
+
+Page range
+
+Every page
+
+Odd pages
+
+Even pages
+
+Custom pages
+
+Preview
+
+4. Compress PDF
+
+Compression presets
+
+Low
+
+Medium
+
+High
+
+Show
+
+Original size
+
+Compressed size
+
+Compression percentage
+
+Estimated quality
+
+5. Images → PDF
+
+Pick multiple images
+
+Drag to reorder
+
+Crop
+
+Rotate
+
+Filters
+
+Margins
+
+Page size
+
+Orientation
+
+Export PDF
+
+6. PDF → Images
+
+Select pages
+
+Export all
+
+Choose quality
+
+PNG/JPEG
+
+7. Document Scanner
+
+Camera
+
+Auto edge detection
+
+Crop
+
+Perspective correction
+
+Rotate
+
+Magic color
+
+Black & White
+
+Save as PDF
+
+Multi-page scanning
+
+8. Password Protection
+
+Encrypt PDF
+
+Password input
+
+Confirm password
+
+Remove password
+
+Validate password
+
+9. Watermark
+
+Text watermark
+
+Image watermark
+
+Opacity
+
+Rotation
+
+Scale
+
+Position
+
+Preview
+
+10. Signature
+
+Draw signature
+
+Import signature
+
+Save signatures
+
+Place on PDF
+
+Resize
+
+Rotate
+
+11. Share
+
+System Share Sheet
+
+Email
+
+Nearby Share
+
+WhatsApp
+
+Print
+
+12. Recent Files
+
+Beautiful recent file list
+
+Thumbnail
+
+File size
+
+Last opened
+
+Favorite
+
+Delete
+
+Rename
+
+--------------------------------------------------
+SETTINGS
+--------------------------------------------------
+
+Theme
+
+System
+
+Light
+
+Dark
+
+Default page view
+
+Default compression
+
+App language
+
+About
+
+Rate App
+
+Privacy Policy
+
+Version
+
+--------------------------------------------------
+FILE MANAGER
+--------------------------------------------------
+
+Beautiful file browser.
+
+Sort by
+
+Name
+
+Date
+
+Size
+
+Search
+
+Grid/List toggle
+
+Favorites
+
+Recently opened
+
+--------------------------------------------------
+DARK MODE
+--------------------------------------------------
+
+Fully implemented.
+
+Use proper Material 3 color schemes.
+
+No hardcoded colors.
+
+--------------------------------------------------
+ANIMATIONS
+--------------------------------------------------
+
+Animated cards
+
+FAB animation
+
+Button ripple
+
+Page transition
+
+Shared element animation
+
+Loading skeletons
+
+Shimmer
+
+--------------------------------------------------
+ERROR HANDLING
+--------------------------------------------------
+
+Graceful errors.
+
+Snackbars.
+
+Retry.
+
+Permission handling.
+
+--------------------------------------------------
+PERMISSIONS
+--------------------------------------------------
+
+Handle Android permissions properly.
+
+Camera
+
+Storage
+
+Photos
+
+--------------------------------------------------
+CODE QUALITY
+--------------------------------------------------
+
+Use:
+
+Repository Pattern
+
+Use Cases
+
+Models
+
+DTOs
+
+Extensions
+
+Reusable Widgets
+
+No duplicated code.
+
+No business logic inside UI.
+
+Use immutable models.
+
+Use Freezed if needed.
+
+--------------------------------------------------
+FOLDER STRUCTURE
+--------------------------------------------------
+
+lib/
+
+core/
+
+shared/
+
+features/
+
+viewer/
+
+merge/
+
+split/
+
+compress/
+
+image_to_pdf/
+
+pdf_to_image/
+
+scanner/
+
+watermark/
+
+signature/
+
+settings/
+
+home/
+
+files/
+
+widgets/
+
+theme/
+
+navigation/
+
+--------------------------------------------------
+UI REQUIREMENTS
+--------------------------------------------------
+
+Every screen should be professionally designed.
+
+Include:
+
+Loading states
+
+Empty states
+
+Success dialogs
+
+Error dialogs
+
+Bottom sheets
+
+Confirmation dialogs
+
+Modern AppBar
+
+Floating buttons where appropriate
+
+Beautiful icons
+
+--------------------------------------------------
+DELIVERABLE
+--------------------------------------------------
+
+Generate a complete Flutter project.
+
+The project must:
+
+Compile successfully.
+
+Contain production-quality code.
+
+Follow Flutter lints.
+
+Use Material 3.
+
+Be modular.
+
+Be easily extendable for Version 2 features like OCR, AI Summary, AI Chat, Cloud Sync, and Office document conversion.
+
+Do not use placeholder UIs.
+
+Build every screen completely with polished UI and proper navigation.

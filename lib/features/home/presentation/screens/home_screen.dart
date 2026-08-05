@@ -201,8 +201,13 @@ class _RecentFilesRail extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncRecent = ref.watch(recentFilesProvider);
 
+    // The rail only claims full card height when it has cards to show —
+    // an empty state at 220px left a dead gap above Quick Actions.
+    final isEmpty = asyncRecent.valueOrNull?.isEmpty ?? false;
+    final hasError = asyncRecent.hasError;
+
     return SizedBox(
-      height: 220,
+      height: isEmpty || hasError ? 72 : 220,
       child: asyncRecent.when(
         loading: () => ShimmerLoading(
           child: ListView.separated(

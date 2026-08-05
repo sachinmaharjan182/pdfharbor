@@ -59,15 +59,25 @@ Full spec: `app_requirements.txt`. Architecture/plan: `/home/dell/.claude/plans/
   - Verified all 14 screens are reachable from the router; no dead screens, no `TODO`/`FIXME`, no `print`.
   - `README.md` rewritten: features, architecture, conventions, the non-obvious library constraints, and concrete V2 extension seams (OCR, AI summary/chat, cloud sync, Office conversion).
 
-## Status: V1 COMPLETE
+## Status: V1 COMPLETE — verified running on device
 
-All 12 spec features are implemented and reachable. Final verification: `flutter analyze` clean · `flutter test` 59/59 passing · `flutter build apk --debug` succeeds.
+All 12 spec features are implemented and reachable. Final verification: `flutter analyze` clean · `flutter test` 68/68 passing · `flutter build apk --debug` succeeds · **installed and launched on an Android 16 emulator with zero runtime exceptions**; Home, Tools, and Settings visually confirmed by screenshot.
+
+### Runtime bugs found only by actually running the app
+
+`flutter build` compiled all three of these fine. They are the reason a device smoke pass is mandatory before calling a phase done.
+
+1. **`TextTheme.apply(fontSizeFactor:)` crashed on first build.** It asserts every style has a non-null `fontSize`, but Material 3's base theme leaves `displayLarge`, `bodyMedium`, `labelSmall`, and `titleSmall` null. `AppTheme._buildTextTheme` now scales each style individually and preserves nulls (null means "inherit"). Covered by `test/shared/app_theme_test.dart`.
+2. **`Material` asserts `shape` and `borderRadius` are never both set.** Introduced while fixing the card-visibility issue below; caught by screenshot, *not* by the logcat grep. Radius now lives inside the shape. Covered by `test/shared/app_card_test.dart`.
+3. **Cards were invisible.** Under this device's dynamic-color palette `surfaceContainerHigh` is nearly identical to the scaffold background. `AppCard` and `cardTheme` now draw a hairline `outlineVariant` border. Also: the empty Recent Files rail reserved 220px of dead space (now 72px), and action cards packed content to the top leaving a dead band (now `spaceBetween`).
+
+**Lesson for future phases:** grepping logcat for errors is not sufficient — Flutter renders assertion failures into a red error widget that a filtered grep can miss entirely. Take a screenshot and look at it.
 
 ### Known gaps / deliberate deviations
 
 - **App language** (Settings) is the single remaining `showComingSoon` — no localization was in scope for V1. Adding it means wiring `flutter_localizations` + ARB files; the setting tile is already there.
 - **Compression rasterizes pages**, losing selectable text. This is a real limitation of re-encoding without a content-stream-level image API. The UI discloses it before the user commits.
-- **No widget/integration tests.** Unit tests cover the pure logic where correctness matters (parsing, page-group math, layout resolution, compression math, Result/Failure). Screen behavior has not been verified on a device by an automated test — a real-device smoke pass is still worth doing.
+- **Thin widget-test coverage.** Unit tests cover the pure logic where correctness matters (parsing, page-group math, layout resolution, compression math, Result/Failure), plus widget tests for `AppTheme` and `AppCard`/`ActionCard` added after the runtime bugs above. The 14 feature screens still have no widget tests, and only Home/Tools/Settings have been exercised on a device. **The tool flows — scanner, crop, print, share, and every PDF operation — have never been run end-to-end.** They depend on platform channels and real files, so they are the most likely place for further runtime bugs.
 - **`MANAGE_EXTERNAL_STORAGE`** is declared so the file browser can list PDFs device-wide. Google Play requires justification for this permission at submission; if it's rejected, fall back to a Storage Access Framework folder picker (`FilesRepository` is an interface, so only the datasource changes).
 
 ## Notes for whoever (or whatever session) resumes next

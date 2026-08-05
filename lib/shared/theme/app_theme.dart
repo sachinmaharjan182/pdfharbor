@@ -42,7 +42,13 @@ abstract final class AppTheme {
         elevation: 0,
         color: scheme.surfaceContainerHigh,
         shadowColor: scheme.shadow.withValues(alpha: 0.08),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.large)),
+        // Outlined rather than elevated — see the note in AppCard: some
+        // dynamic-color palettes make container surfaces indistinguishable
+        // from the background.
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.large),
+          side: BorderSide(color: scheme.outlineVariant.withValues(alpha: 0.5)),
+        ),
         margin: EdgeInsets.zero,
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -110,20 +116,46 @@ abstract final class AppTheme {
     );
   }
 
+  /// The spec asks for a slightly larger type scale than Material's default.
+  ///
+  /// This scales each style individually rather than via
+  /// `TextTheme.apply(fontSizeFactor:)`, which asserts that *every* style
+  /// has a non-null `fontSize` — not guaranteed for a Material 3 base
+  /// theme, and it crashes at first build when one is null.
   static TextTheme _buildTextTheme(TextTheme base) {
-    return base
-        .copyWith(
-          displayLarge: base.displayLarge?.copyWith(fontWeight: FontWeight.w700, letterSpacing: -1),
-          displayMedium:
-              base.displayMedium?.copyWith(fontWeight: FontWeight.w700, letterSpacing: -0.5),
-          headlineLarge: base.headlineLarge?.copyWith(fontWeight: FontWeight.w700),
-          headlineMedium: base.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
-          headlineSmall: base.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
-          titleLarge: base.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-          titleMedium: base.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-          bodyLarge: base.bodyLarge?.copyWith(height: 1.4),
-          bodyMedium: base.bodyMedium?.copyWith(height: 1.4),
-        )
-        .apply(fontSizeFactor: 1.05);
+    return TextTheme(
+      displayLarge: _scale(base.displayLarge)?.copyWith(
+        fontWeight: FontWeight.w700,
+        letterSpacing: -1,
+      ),
+      displayMedium: _scale(base.displayMedium)?.copyWith(
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5,
+      ),
+      displaySmall: _scale(base.displaySmall),
+      headlineLarge: _scale(base.headlineLarge)?.copyWith(fontWeight: FontWeight.w700),
+      headlineMedium: _scale(base.headlineMedium)?.copyWith(fontWeight: FontWeight.w700),
+      headlineSmall: _scale(base.headlineSmall)?.copyWith(fontWeight: FontWeight.w700),
+      titleLarge: _scale(base.titleLarge)?.copyWith(fontWeight: FontWeight.w600),
+      titleMedium: _scale(base.titleMedium)?.copyWith(fontWeight: FontWeight.w600),
+      titleSmall: _scale(base.titleSmall),
+      bodyLarge: _scale(base.bodyLarge)?.copyWith(height: 1.4),
+      bodyMedium: _scale(base.bodyMedium)?.copyWith(height: 1.4),
+      bodySmall: _scale(base.bodySmall),
+      labelLarge: _scale(base.labelLarge),
+      labelMedium: _scale(base.labelMedium),
+      labelSmall: _scale(base.labelSmall),
+    );
+  }
+
+  static const double _fontSizeFactor = 1.05;
+
+  /// Scales a style's size when it has one, and leaves it untouched when it
+  /// doesn't — a null `fontSize` means "inherit", which must be preserved.
+  static TextStyle? _scale(TextStyle? style) {
+    if (style == null) return null;
+    final size = style.fontSize;
+    if (size == null) return style;
+    return style.copyWith(fontSize: size * _fontSizeFactor);
   }
 }

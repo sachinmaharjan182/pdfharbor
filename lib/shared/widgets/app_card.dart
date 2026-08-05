@@ -25,11 +25,20 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = context.colorScheme;
     final radius = borderRadius ?? BorderRadius.circular(AppRadius.large);
     return Material(
-      color: color ?? context.colorScheme.surfaceContainerHigh,
-      borderRadius: radius,
+      color: color ?? scheme.surfaceContainerHigh,
       clipBehavior: Clip.antiAlias,
+      // A hairline outline, not elevation: under some dynamic-color
+      // palettes `surfaceContainerHigh` is nearly identical to the
+      // scaffold background, which left cards invisible on device.
+      // Note: Material asserts that `shape` and `borderRadius` are never
+      // both set, so the radius lives inside the shape.
+      shape: RoundedRectangleBorder(
+        borderRadius: radius,
+        side: BorderSide(color: scheme.outlineVariant.withValues(alpha: 0.5)),
+      ),
       child: InkWell(
         onTap: onTap,
         onLongPress: onLongPress,
@@ -63,8 +72,11 @@ class ActionCard extends StatelessWidget {
     return AppCard(
       onTap: onTap,
       padding: const EdgeInsets.all(AppSpacing.lg),
+      // Icon pinned top, label pinned bottom — packing both to the top
+      // left a dead band across the lower half of every card.
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             padding: const EdgeInsets.all(AppSpacing.md),
@@ -74,7 +86,7 @@ class ActionCard extends StatelessWidget {
             ),
             child: Icon(icon, color: iconColor ?? scheme.onSecondaryContainer, size: 24),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.md),
           Text(
             label,
             style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),

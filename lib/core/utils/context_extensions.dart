@@ -29,4 +29,10 @@ extension BuildContextX on BuildContext {
         ),
       );
   }
+
+  /// For quick-action cards whose feature phase hasn't landed yet (see
+  /// BUILD_PROGRESS.md). Never silently no-ops a tap.
+  void showComingSoon(String featureName) {
+    showSnackBar('$featureName is coming in a future update');
+  }
 }

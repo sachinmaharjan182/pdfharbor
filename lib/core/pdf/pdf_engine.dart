@@ -22,6 +22,31 @@ class ExtractPagesRequest {
   final List<int> pageIndices;
 }
 
+/// One image destined to become a PDF page.
+class PdfImagePage {
+  const PdfImagePage({
+    required this.bytes,
+    required this.pageSize,
+    this.margin = 0,
+  });
+
+  /// Encoded image bytes (JPEG or PNG).
+  final Uint8List bytes;
+
+  /// Destination page size in PDF points.
+  final Size pageSize;
+
+  /// Uniform margin in points; the image is fitted inside what's left.
+  final double margin;
+}
+
+/// Arguments for [PdfEngine.buildFromImages].
+class BuildFromImagesRequest {
+  const BuildFromImagesRequest(this.pages);
+
+  final List<PdfImagePage> pages;
+}
+
 /// Pure-Dart PDF operations built on Syncfusion, run off the UI thread.
 ///
 /// Syncfusion has no page-import API in this version, so pages are copied
@@ -39,6 +64,59 @@ abstract final class PdfEngine {
 
   /// Reads a document's page count without rendering anything.
   static Future<int> pageCount(Uint8List bytes) => compute(_pageCountIsolate, bytes);
+
+  /// Assembles a PDF whose pages are the supplied images. Backs both
+  /// Image→PDF and compression (which rasterizes pages first).
+  static Future<Uint8List> buildFromImages(BuildFromImagesRequest request) {
+    return compute(_buildFromImagesIsolate, request);
+  }
+
+  /// Page dimensions in points for every page, used to size rasterized
+  /// output so a compressed document keeps its original page geometry.
+  static Future<List<Size>> pageSizes(Uint8List bytes) => compute(_pageSizesIsolate, bytes);
+}
+
+Uint8List _buildFromImagesIsolate(BuildFromImagesRequest request) {
+  final document = PdfDocument();
+  document.compressionLevel = PdfCompressionLevel.best;
+  document.pageSettings.setMargins(0);
+
+  try {
+    for (final imagePage in request.pages) {
+      document.pageSettings.size = imagePage.pageSize;
+      final page = document.pages.add();
+      final bitmap = PdfBitmap(imagePage.bytes);
+
+      final available = Size(
+        imagePage.pageSize.width - imagePage.margin * 2,
+        imagePage.pageSize.height - imagePage.margin * 2,
+      );
+      if (available.width <= 0 || available.height <= 0) continue;
+
+      // Contain-fit so images are never stretched or cropped.
+      final scale = (available.width / bitmap.width) < (available.height / bitmap.height)
+          ? available.width / bitmap.width
+          : available.height / bitmap.height;
+      final drawWidth = bitmap.width * scale;
+      final drawHeight = bitmap.height * scale;
+      final left = imagePage.margin + (available.width - drawWidth) / 2;
+      final top = imagePage.margin + (available.height - drawHeight) / 2;
+
+      page.graphics.drawImage(bitmap, Rect.fromLTWH(left, top, drawWidth, drawHeight));
+    }
+    return Uint8List.fromList(document.saveSync());
+  } finally {
+    document.dispose();
+  }
+}
+
+List<Size> _pageSizesIsolate(Uint8List bytes) {
+  final document = PdfDocument(inputBytes: bytes);
+  try {
+    return [for (var i = 0; i < document.pages.count; i++) document.pages[i].size];
+  } finally {
+    document.dispose();
+  }
 }
 
 Uint8List _mergeIsolate(MergeRequest request) {

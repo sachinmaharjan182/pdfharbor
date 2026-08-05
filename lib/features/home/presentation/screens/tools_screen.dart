@@ -68,11 +68,11 @@ class ToolsScreen extends StatelessWidget {
     _ToolGroup('Organize', [
       _Tool(Icons.call_merge_rounded, 'Merge PDF', route: AppRoutes.merge),
       _Tool(Icons.call_split_rounded, 'Split PDF', route: AppRoutes.split),
-      _Tool(Icons.compress_rounded, 'Compress PDF'),
+      _Tool(Icons.compress_rounded, 'Compress PDF', route: AppRoutes.compress),
     ]),
     _ToolGroup('Convert', [
-      _Tool(Icons.image_rounded, 'Image to PDF'),
-      _Tool(Icons.collections_rounded, 'PDF to Images'),
+      _Tool(Icons.image_rounded, 'Image to PDF', route: AppRoutes.imageToPdf),
+      _Tool(Icons.collections_rounded, 'PDF to Images', route: AppRoutes.pdfToImage),
       _Tool(Icons.document_scanner_rounded, 'Scan Document'),
     ]),
     _ToolGroup('Edit & Protect', [

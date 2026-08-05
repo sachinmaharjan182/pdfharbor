@@ -3,8 +3,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/files/presentation/screens/files_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/compress/presentation/screens/compress_screen.dart';
 import '../../features/home/presentation/screens/tools_screen.dart';
+import '../../features/image_to_pdf/presentation/screens/image_to_pdf_screen.dart';
 import '../../features/merge/presentation/screens/merge_screen.dart';
+import '../../features/pdf_to_image/presentation/screens/pdf_to_image_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../../features/split/presentation/screens/split_screen.dart';
 import '../../features/viewer/presentation/screens/viewer_screen.dart';
@@ -21,6 +24,9 @@ abstract final class AppRoutes {
   static const String viewer = '/viewer';
   static const String merge = '/merge';
   static const String split = '/split';
+  static const String compress = '/compress';
+  static const String imageToPdf = '/image-to-pdf';
+  static const String pdfToImage = '/pdf-to-image';
 
   /// The viewer takes the document path as a query parameter so a file can
   /// be opened from any tab without threading arguments through the shell.
@@ -94,6 +100,24 @@ final appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       pageBuilder: (context, state) =>
           sharedAxisPage(key: state.pageKey, child: const SplitScreen()),
+    ),
+    GoRoute(
+      path: AppRoutes.compress,
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          sharedAxisPage(key: state.pageKey, child: const CompressScreen()),
+    ),
+    GoRoute(
+      path: AppRoutes.imageToPdf,
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          sharedAxisPage(key: state.pageKey, child: const ImageToPdfScreen()),
+    ),
+    GoRoute(
+      path: AppRoutes.pdfToImage,
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          sharedAxisPage(key: state.pageKey, child: const PdfToImageScreen()),
     ),
   ],
 );

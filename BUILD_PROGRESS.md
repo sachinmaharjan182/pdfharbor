@@ -38,7 +38,13 @@ Full spec: `app_requirements.txt`. Architecture/plan: `/home/dell/.claude/plans/
   - **Merge:** multi-select via `PdfPicker`, drag-to-reorder (`ReorderableListView`, output order = list order), per-item remove, thumbnails, save-as dialog, progress bar, requires ≥2 files.
   - **Split:** modes are every-page / page-range / odd / even / custom (`1,3,5-8`), with a live result preview and inline validation. Page-selection parsing (`parse_page_selection.dart`) and mode→page-group mapping (`build_page_groups.dart`) are pure functions with **34 unit tests total** covering reversed ranges, dedup, whitespace, and out-of-bounds rejection.
   - **Verified:** `flutter analyze` clean, `flutter test` 34/34 passing, `flutter build apk --debug` succeeds.
-- [ ] **Phase 5 — Compress & Image↔PDF.**
+- [x] **Phase 5 — Compress & Image↔PDF.** Routes `/compress`, `/image-to-pdf`, `/pdf-to-image`, wired into Home quick actions and Tools.
+  - **Shared infra added here:** `core/image/image_processor.dart` (decode → rotate → downscale to 2400px longest edge → filter → JPEG re-encode, all via `compute`; the scanner should reuse this), and `PdfEngine.buildFromImages` / `PdfEngine.pageSizes`.
+  - **Compress:** Low/Medium/High presets (render scale + JPEG quality), real per-page progress, and a before/after card showing original size, compressed size, and % saved. **Compression rasterizes pages** (Syncfusion can't re-encode embedded images in place), so output text is no longer selectable — the UI states this explicitly instead of silently degrading the file. `savingsPercent` clamps at 0 because re-encoding an already-optimized PDF can grow it; that case shows an honest "already well optimized" snackbar.
+  - **Image→PDF:** multi-image pick, drag-reorder, per-image rotate / crop (`image_cropper`) / filter, apply-filter-to-all, page size (A4/Letter/Legal/A3/A5/fit-to-image), orientation, margins. Orientation is disabled for fit-to-image since each page follows its own image.
+  - **PDF→Images:** per-page selection chips with select-all, JPEG/PNG, three quality levels, per-page progress, share sheet for the exported set. Pages render strictly one at a time (Android renderer constraint).
+  - **Runtime bug caught and fixed here:** `image_cropper` does **not** contribute `com.yalantis.ucrop.UCropActivity` via manifest merge — it must be declared manually in `android/app/src/main/AndroidManifest.xml` or tapping Crop throws `ActivityNotFoundException`. Verified present in the merged manifest. **Don't remove that entry.**
+  - **Verified:** `flutter analyze` clean, `flutter test` 46/46 passing, `flutter build apk --debug` succeeds.
 - [ ] **Phase 6 — Scanner, Watermark, Signature, Password.**
 - [ ] **Phase 7 — Polish & QA.** Share integrations, shimmer/animation pass, empty/error state audit, `flutter analyze` clean, V2 extension notes.
 

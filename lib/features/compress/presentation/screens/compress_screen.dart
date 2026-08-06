@@ -10,6 +10,7 @@ import '../../../../core/utils/file_size_extension.dart';
 import '../../../../core/utils/pdf_picker.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/empty_state.dart';
+import '../../../../shared/widgets/selection_mark.dart';
 import '../../../files/presentation/providers/files_providers.dart';
 import '../../../files/presentation/widgets/pdf_thumbnail.dart';
 import '../../../settings/presentation/providers/settings_providers.dart';
@@ -142,28 +143,29 @@ class _CompressScreenState extends ConsumerState<CompressScreen> {
   }
 
   Widget _buildPresetTile(CompressionPreset preset) {
+    final scheme = context.colorScheme;
     final isSelected = _preset == preset;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: AppCard(
-        color: isSelected
-            ? context.colorScheme.secondaryContainer
-            : context.colorScheme.surfaceContainerHigh,
+        color: isSelected ? scheme.secondaryContainer : scheme.surfaceContainerHigh,
+        borderColor: isSelected ? scheme.primary : null,
+        borderRadius: BorderRadius.circular(AppRadius.medium),
         padding: EdgeInsets.zero,
         onTap: _isCompressing ? null : () => setState(() => _preset = preset),
         child: ListTile(
-          leading: Icon(
-            isSelected
-                ? Icons.radio_button_checked_rounded
-                : Icons.radio_button_unchecked_rounded,
-            color: isSelected ? context.colorScheme.primary : null,
-          ),
           title: Text(preset.label),
           subtitle: Text(preset.description),
-          trailing: Text(
-            preset.estimatedQuality,
-            style: context.textTheme.labelSmall
-                ?.copyWith(color: context.colorScheme.onSurfaceVariant),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                preset.estimatedQuality,
+                style: context.textTheme.labelSmall?.copyWith(color: scheme.onSurfaceVariant),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              SelectionMark(isSelected: isSelected),
+            ],
           ),
         ),
       ),

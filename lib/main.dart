@@ -1,4 +1,3 @@
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,17 +20,15 @@ class PdfVerseApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(settingsProvider.select((s) => s.themeMode));
 
-    return DynamicColorBuilder(
-      builder: (lightDynamic, darkDynamic) {
-        return MaterialApp.router(
-          title: AppConstants.appName,
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.light(lightDynamic),
-          darkTheme: AppTheme.dark(darkDynamic),
-          themeMode: themeMode,
-          routerConfig: appRouter,
-        );
-      },
+    // No `DynamicColorBuilder` here on purpose: PDFHarbor uses its own brand
+    // palette, and the platform's wallpaper colors would repaint it.
+    return MaterialApp.router(
+      title: AppConstants.appName,
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: themeMode,
+      routerConfig: appRouter,
     );
   }
 }

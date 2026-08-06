@@ -11,6 +11,7 @@ import '../../../../core/utils/pdf_picker.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/error_view.dart';
+import '../../../../shared/widgets/selection_mark.dart';
 import '../../../files/presentation/widgets/pdf_thumbnail.dart';
 import '../../domain/entities/export_options.dart';
 import '../providers/pdf_to_image_providers.dart';
@@ -230,24 +231,20 @@ class _PdfToImageScreenState extends ConsumerState<PdfToImageScreen> {
   }
 
   Widget _buildFormatTile(ImageExportFormat format) {
+    final scheme = context.colorScheme;
     final isSelected = _format == format;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: AppCard(
-        color: isSelected
-            ? context.colorScheme.secondaryContainer
-            : context.colorScheme.surfaceContainerHigh,
+        color: isSelected ? scheme.secondaryContainer : scheme.surfaceContainerHigh,
+        borderColor: isSelected ? scheme.primary : null,
+        borderRadius: BorderRadius.circular(AppRadius.medium),
         padding: EdgeInsets.zero,
         onTap: _isExporting ? null : () => setState(() => _format = format),
         child: ListTile(
-          leading: Icon(
-            isSelected
-                ? Icons.radio_button_checked_rounded
-                : Icons.radio_button_unchecked_rounded,
-            color: isSelected ? context.colorScheme.primary : null,
-          ),
           title: Text(format.label),
           subtitle: Text(format.description),
+          trailing: SelectionMark(isSelected: isSelected),
         ),
       ),
     );

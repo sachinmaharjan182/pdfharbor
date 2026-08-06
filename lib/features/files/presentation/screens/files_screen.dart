@@ -47,6 +47,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        titleSpacing: AppSpacing.xl,
         title: const Text('Files'),
         actions: [
           IconButton(
@@ -60,7 +61,8 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
             },
           ),
           PopupMenuButton<FileSortOrder>(
-            icon: const Icon(Icons.sort_rounded),
+            icon: const Icon(Icons.tune_rounded),
+            tooltip: 'Sort',
             onSelected: (order) => ref.read(fileSortOrderProvider.notifier).state = order,
             itemBuilder: (context) => [
               _sortMenuItem(FileSortOrder.name, 'Name', sortOrder),
@@ -68,43 +70,30 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
               _sortMenuItem(FileSortOrder.size, 'Size', sortOrder),
             ],
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.md),
         ],
       ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(
-              AppSpacing.lg,
+              AppSpacing.xl,
               AppSpacing.sm,
+              AppSpacing.xl,
               AppSpacing.lg,
-              AppSpacing.sm,
             ),
             child: TextField(
               onChanged: (value) => ref.read(fileSearchQueryProvider.notifier).state = value,
               decoration: const InputDecoration(
-                hintText: 'Search PDFs',
+                hintText: 'Search files…',
                 prefixIcon: Icon(Icons.search_rounded),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: SegmentedButton<FileFilter>(
-                segments: const [
-                  ButtonSegment(value: FileFilter.all, label: Text('All')),
-                  ButtonSegment(value: FileFilter.recent, label: Text('Recent')),
-                  ButtonSegment(value: FileFilter.favorites, label: Text('Favorites')),
-                ],
-                selected: {filter},
-                onSelectionChanged: (selection) =>
-                    ref.read(fileFilterProvider.notifier).state = selection.first,
-              ),
-            ),
+          _FilterTabs(
+            current: filter,
+            onSelected: (value) => ref.read(fileFilterProvider.notifier).state = value,
           ),
-          const SizedBox(height: AppSpacing.sm),
           Expanded(child: _buildBody(context, filter: filter, sortOrder: sortOrder, query: query)),
         ],
       ),
@@ -141,7 +130,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
       return EmptyState(
         icon: Icons.folder_off_rounded,
         title: 'Storage access needed',
-        message: 'PDFverse needs storage access to find PDFs on your device.',
+        message: 'PDFHarbor needs storage access to find PDFs on your device.',
         action: FilledButton(
           onPressed: () => ref.read(permissionServiceProvider).openSettings(),
           child: const Text('Open Settings'),
@@ -152,7 +141,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
       return EmptyState(
         icon: Icons.folder_off_rounded,
         title: 'Storage access needed',
-        message: 'Grant storage access so PDFverse can list PDFs on your device.',
+        message: 'Grant storage access so PDFHarbor can list PDFs on your device.',
         action: FilledButton(onPressed: _ensurePermission, child: const Text('Grant Access')),
       );
     }
@@ -181,7 +170,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
         if (filtered.isEmpty) {
           return EmptyState(
             icon: filter == FileFilter.favorites
-                ? Icons.favorite_border_rounded
+                ? Icons.star_border_rounded
                 : Icons.picture_as_pdf_outlined,
             title: query.isNotEmpty ? 'No matches' : 'No PDFs found',
             message: query.isNotEmpty
@@ -199,9 +188,9 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
           child: ref.watch(fileViewModeProvider) == FileViewMode.list
               ? ListView.separated(
                   padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.xl,
                     AppSpacing.lg,
-                    AppSpacing.sm,
-                    AppSpacing.lg,
+                    AppSpacing.xl,
                     AppSpacing.xxxl,
                   ),
                   itemCount: filtered.length,
@@ -210,15 +199,15 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
                 )
               : GridView.builder(
                   padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.xl,
                     AppSpacing.lg,
-                    AppSpacing.sm,
-                    AppSpacing.lg,
+                    AppSpacing.xl,
                     AppSpacing.xxxl,
                   ),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: context.isTablet ? 4 : 2,
-                    crossAxisSpacing: AppSpacing.lg,
-                    mainAxisSpacing: AppSpacing.lg,
+                    crossAxisSpacing: AppSpacing.md,
+                    mainAxisSpacing: AppSpacing.md,
                     childAspectRatio: 0.68,
                   ),
                   itemCount: filtered.length,
@@ -327,6 +316,73 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
     result.fold((_) => invalidateFilesProviders(ref), (failure) {
       if (mounted) context.showSnackBar(failure.message, isError: true);
     });
+  }
+}
+
+/// Underlined tab row for the All / Recent / Favorites filters.
+class _FilterTabs extends StatelessWidget {
+  const _FilterTabs({required this.current, required this.onSelected});
+
+  final FileFilter current;
+  final ValueChanged<FileFilter> onSelected;
+
+  static const Map<FileFilter, String> _labels = {
+    FileFilter.all: 'All',
+    FileFilter.recent: 'Recent',
+    FileFilter.favorites: 'Favorites',
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = context.colorScheme;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+        child: Row(
+          children: [
+            for (final entry in _labels.entries)
+              _tab(context, filter: entry.key, label: entry.value),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _tab(BuildContext context, {required FileFilter filter, required String label}) {
+    final scheme = context.colorScheme;
+    final selected = filter == current;
+    return InkWell(
+      onTap: () => onSelected(filter),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+              child: Text(
+                label,
+                style: context.textTheme.labelLarge?.copyWith(
+                  color: selected ? scheme.primary : scheme.onSurfaceVariant,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                ),
+              ),
+            ),
+            Container(
+              height: 2,
+              width: 28,
+              decoration: BoxDecoration(
+                color: selected ? scheme.primary : Colors.transparent,
+                borderRadius: BorderRadius.circular(AppRadius.pill),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

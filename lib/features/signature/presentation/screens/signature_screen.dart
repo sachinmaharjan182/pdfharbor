@@ -385,7 +385,7 @@ class _SignatureScreenState extends ConsumerState<SignatureScreen> {
     final confirmed = await showConfirmDialog(
       context,
       title: 'Delete signature?',
-      message: 'This removes the saved signature from PDFverse.',
+      message: 'This removes the saved signature from PDFHarbor.',
       confirmLabel: 'Delete',
       isDestructive: true,
     );

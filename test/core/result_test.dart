@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pdfverse/core/error/failure.dart';
-import 'package:pdfverse/core/error/result.dart';
+import 'package:pdfharbor/core/error/failure.dart';
+import 'package:pdfharbor/core/error/result.dart';
 
 void main() {
   group('Result', () {

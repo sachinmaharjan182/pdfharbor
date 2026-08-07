@@ -7,11 +7,11 @@ import 'package:path_provider/path_provider.dart';
 /// Writes tool output (merged/split/compressed PDFs, exported images) to a
 /// user-visible folder.
 ///
-/// Prefers the public `Documents/PDFverse` directory so results survive
+/// Prefers the public `Documents/PDFHarbor` directory so results survive
 /// uninstall and are reachable from other apps; falls back to app-private
 /// storage when that isn't writable.
 abstract final class OutputFileService {
-  static const String _publicDir = '/storage/emulated/0/Documents/PDFverse';
+  static const String _publicDir = '/storage/emulated/0/Documents/PDFHarbor';
 
   static Future<Directory> outputDirectory() async {
     final public = Directory(_publicDir);
@@ -20,7 +20,7 @@ abstract final class OutputFileService {
       return public;
     } on FileSystemException {
       final fallback = await getApplicationDocumentsDirectory();
-      final dir = Directory(p.join(fallback.path, 'PDFverse'));
+      final dir = Directory(p.join(fallback.path, 'PDFHarbor'));
       if (!await dir.exists()) await dir.create(recursive: true);
       return dir;
     }

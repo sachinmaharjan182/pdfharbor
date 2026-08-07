@@ -10,11 +10,11 @@ import 'shared/theme/app_theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await HiveService.init();
-  runApp(const ProviderScope(child: PdfVerseApp()));
+  runApp(const ProviderScope(child: PdfHarborApp()));
 }
 
-class PdfVerseApp extends ConsumerWidget {
-  const PdfVerseApp({super.key});
+class PdfHarborApp extends ConsumerWidget {
+  const PdfHarborApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

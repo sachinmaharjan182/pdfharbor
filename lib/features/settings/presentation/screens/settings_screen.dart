@@ -69,12 +69,15 @@ class SettingsScreen extends ConsumerWidget {
                 title: 'Rate PDFHarbor',
                 onTap: () => _openUrl(
                   context,
-                  'https://play.google.com/store/apps/details?id=com.pdfverse.app',
+                  'https://play.google.com/store/apps/details?id=np.com.sachinmaharzan.pdfharbor',
                 ),
               ),
               _SettingsTile(
                 title: 'Privacy Policy',
-                onTap: () => _openUrl(context, 'https://pdfverse.app/privacy'),
+                onTap: () => _openUrl(
+                  context,
+                  'https://sachinmaharzan.com.np/pdfharbor/privacy-policy.html',
+                ),
               ),
               _SettingsTile(
                 title: 'About PDFHarbor',

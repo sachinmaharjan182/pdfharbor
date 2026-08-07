@@ -56,7 +56,7 @@ lib/
 
 ## Where output files go
 
-Tool results are written to `Documents/PDFverse` (falling back to app-private storage if that isn't writable). Names auto-suffix — ` (2)`, ` (3)` — so a run never silently overwrites an earlier result. **Source files are never modified in place**; every tool writes a new copy.
+Tool results are written to `Documents/PDFHarbor` (falling back to app-private storage if that isn't writable). Names auto-suffix — ` (2)`, ` (3)` — so a run never silently overwrites an earlier result. **Source files are never modified in place**; every tool writes a new copy.
 
 ## Notable implementation constraints
 

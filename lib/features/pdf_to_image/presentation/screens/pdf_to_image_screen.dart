@@ -192,7 +192,7 @@ class _PdfToImageScreenState extends ConsumerState<PdfToImageScreen> {
           Expanded(
             child: Text(
               '${paths.length} ${paths.length == 1 ? 'image' : 'images'} saved to '
-              'Documents/PDFverse',
+              'Documents/PDFHarbor',
               style: context.textTheme.bodyMedium
                   ?.copyWith(color: context.colorScheme.onPrimaryContainer),
             ),

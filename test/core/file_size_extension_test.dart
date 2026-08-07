@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pdfverse/core/utils/file_size_extension.dart';
+import 'package:pdfharbor/core/utils/file_size_extension.dart';
 
 void main() {
   group('readableFileSize', () {

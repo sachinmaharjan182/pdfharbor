@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pdfverse/features/image_to_pdf/domain/entities/page_layout.dart';
+import 'package:pdfharbor/features/image_to_pdf/domain/entities/page_layout.dart';
 
 void main() {
   group('resolvePageSize', () {

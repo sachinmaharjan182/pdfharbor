@@ -1,4 +1,4 @@
-# PDFverse — Build Progress
+# PDFHarbor — Build Progress
 
 > **Read this file first when resuming work on this project**, then check `git log --oneline` to confirm what's actually committed. This file is updated in the same commit as the work it describes, so it should always match `HEAD`.
 
@@ -12,7 +12,7 @@ Full spec: `app_requirements.txt`. Architecture/plan: `/home/dell/.claude/plans/
 - **State mgmt:** plain Riverpod (`flutter_riverpod`, `Notifier`/`AsyncNotifier`), **no riverpod_generator** — kept simple to minimize build_runner surface.
 - **Models:** `freezed` + `json_serializable`.
 - **Hive:** boxes store plain `Map<dynamic, dynamic>` (via each model's `toJson()`/`fromJson()`), **no `hive_generator`/`TypeAdapter`s** — hive_generator conflicts with freezed's analyzer version constraint (verified during Phase 0; do not re-add it without re-checking this). See `lib/core/hive/hive_service.dart`.
-- **App identity:** applicationId/namespace `com.pdfverse.app`, package folder `android/app/src/main/kotlin/com/pdfverse/app/`. minSdk follows `flutter.minSdkVersion` (currently **24**); core library desugaring + multidex are enabled in `android/app/build.gradle.kts`.
+- **App identity:** applicationId/namespace `np.com.sachinmaharzan.pdfharbor`, package folder `android/app/src/main/kotlin/np/com/sachinmaharzan/pdfharbor/`. minSdk follows `flutter.minSdkVersion` (currently **24**); core library desugaring + multidex are enabled in `android/app/build.gradle.kts`.
 - Android-only project (`flutter create --platforms=android`).
 
 ## Phase checklist
@@ -33,7 +33,7 @@ Full spec: `app_requirements.txt`. Architecture/plan: `/home/dell/.claude/plans/
 - [x] **Phase 4 — Merge & Split.** Both routed outside the nav shell (`/merge`, `/split`), reachable from Home quick actions and the Tools screen.
   - **Shared infra added here (reuse it for compress/watermark):**
     - `core/pdf/pdf_engine.dart` — Syncfusion operations run off the UI thread via `compute`. **This version of `syncfusion_flutter_pdf` has no page-import API**, so pages are copied with `createTemplate()` + `drawPdfTemplate`, sizing each destination page to the source page so dimensions/orientation survive. Exposes `merge`, `extractPages`, `pageCount`.
-    - `core/utils/output_file_service.dart` — writes results to `Documents/PDFverse` (falls back to app-private storage), auto-suffixing ` (2)`, ` (3)`… so a run never silently overwrites an earlier result.
+    - `core/utils/output_file_service.dart` — writes results to `Documents/PDFHarbor` (falls back to app-private storage), auto-suffixing ` (2)`, ` (3)`… so a run never silently overwrites an earlier result.
     - `shared/widgets/result_success_sheet.dart` — the standard "saved → open/share" ending for every tool.
   - **Merge:** multi-select via `PdfPicker`, drag-to-reorder (`ReorderableListView`, output order = list order), per-item remove, thumbnails, save-as dialog, progress bar, requires ≥2 files.
   - **Split:** modes are every-page / page-range / odd / even / custom (`1,3,5-8`), with a live result preview and inline validation. Page-selection parsing (`parse_page_selection.dart`) and mode→page-group mapping (`build_page_groups.dart`) are pure functions with **34 unit tests total** covering reversed ranges, dedup, whitespace, and out-of-bounds rejection.
@@ -65,7 +65,8 @@ Full spec: `app_requirements.txt`. Architecture/plan: `/home/dell/.claude/plans/
   - **Screens:** Home (greeting block, search pill, dark "Continue reading" panel built from the existing most-recent entry, compact recent rail, 4-up accent quick actions), Files (underlined filter tabs replacing the segmented button, restyled rows, star instead of heart for favourites), Tools (accent rows with descriptions instead of a grid), Settings (label + value rows, no leading icons).
   - `AppRadius.medium` is now 16 and `large` 20 (were 20/24), plus `AppRadius.pill`. Buttons are 16-radius, not fully rounded.
   - **Rename + launcher icon (2026-08-06).** Product name is now **PDFHarbor** (`android:label`, `AppConstants.appName`, and every user-facing string). Launcher icons are generated from `images/app_logo.png` (1024², transparent, artwork bbox 750×768 at +137+112 — cropped to a 768² square first): legacy `ic_launcher` + `ic_launcher_round` at all five densities, plus an adaptive icon (`mipmap-anydpi-v26/ic_launcher{,_round}.xml`, foreground at 72dp of the 108dp canvas over `@color/ic_launcher_background` = white). Regenerate with ImageMagick from that source if the logo changes.
-    - **Deliberately NOT renamed:** the applicationId / package folder `com.pdfverse.app` (and the Play URL that embeds it), and the `Documents/PDFverse` output folder — renaming that would orphan every file already produced by the app. Both are one-line changes if wanted.
+    - At the time only user-facing strings were renamed; the identifiers were left on the old name and were renamed later — see below.
+- [x] **Identifier rename (2026-08-07).** The old `pdfverse` name is gone everywhere. Dart package `pdfverse` → **`pdfharbor`** (`pubspec.yaml` + every `package:` import in `test/`; `lib/` uses relative imports throughout so it was unaffected). applicationId/namespace `com.pdfverse.app` → **`np.com.sachinmaharzan.pdfharbor`**, with `MainActivity.kt` moved to the matching folder and its `package` line updated. `PdfVerseApp` → `PdfHarborApp` in `main.dart`. Output folder `Documents/PDFverse` → **`Documents/PDFHarbor`** (`output_file_service.dart`, plus the two screens that name it) — **this orphans results produced by earlier builds**; they stay in the old folder, the app just no longer lists them there. The Play URL follows the new applicationId, and the Settings → Privacy Policy link now points at the real hosted policy, `https://sachinmaharzan.com.np/pdfharbor/privacy-policy.html` — the same URL must go in the Play Console "Privacy policy" field, and any edit to `privacy-policy.html` has to be re-uploaded there.
   - **Verified on device (Galaxy S25, Android 16):** `flutter analyze` clean · `flutter test` 68/68 · `flutter build apk --debug` succeeds · Home, Files, Tools, Settings, a tool empty state, and the theme sheet screenshotted in **both light and dark**. One overflow was found and fixed this way (quick-action tiles: label is now `Flexible` + ellipsis, grid aspect 0.76).
 
 ## Status: V1 COMPLETE — verified running on device

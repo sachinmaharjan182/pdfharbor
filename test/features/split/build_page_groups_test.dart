@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pdfverse/features/split/domain/entities/split_mode.dart';
-import 'package:pdfverse/features/split/domain/usecases/build_page_groups.dart';
+import 'package:pdfharbor/features/split/domain/entities/split_mode.dart';
+import 'package:pdfharbor/features/split/domain/usecases/build_page_groups.dart';
 
 void main() {
   group('buildPageGroups', () {

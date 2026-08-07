@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pdfverse/shared/widgets/app_card.dart';
-import 'package:pdfverse/shared/theme/app_theme.dart';
+import 'package:pdfharbor/shared/widgets/app_card.dart';
+import 'package:pdfharbor/shared/theme/app_theme.dart';
 
 /// Pumps [child] inside the real app theme, so theme-dependent assertions
 /// fire here rather than on device.

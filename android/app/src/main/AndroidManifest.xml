@@ -3,8 +3,11 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+    <!-- Images only. The app picks images for Images-to-PDF, watermarks and
+         signature import; it has no video feature, so READ_MEDIA_VIDEO is
+         deliberately not declared. permission_handler maps Permission.photos
+         to READ_MEDIA_IMAGES alone, so nothing here depends on the video one. -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- Lets the File Manager feature list PDFs anywhere on device storage,
          not just files the app created. Legitimate under Play policy for

@@ -18,12 +18,15 @@ class SettingsScreen extends ConsumerWidget {
     final packageInfo = ref.watch(packageInfoProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        titleSpacing: AppSpacing.xl,
+        title: const Text('Settings'),
+      ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(
-          AppSpacing.lg,
+          AppSpacing.xl,
           AppSpacing.sm,
-          AppSpacing.lg,
+          AppSpacing.xl,
           AppSpacing.xxxl,
         ),
         children: [
@@ -31,60 +34,55 @@ class SettingsScreen extends ConsumerWidget {
             title: 'Appearance',
             children: [
               _SettingsTile(
-                icon: Icons.brightness_6_rounded,
                 title: 'Theme',
-                subtitle: _themeModeLabel(settings.themeMode),
+                value: _themeModeLabel(settings.themeMode),
                 onTap: () => _showThemePicker(context, ref, settings.themeMode),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.xl),
           _SettingsGroup(
             title: 'Defaults',
             children: [
               _SettingsTile(
-                icon: Icons.auto_stories_rounded,
                 title: 'Default page view',
-                subtitle: _pageViewLabel(settings.defaultPageView),
+                value: _pageViewLabel(settings.defaultPageView),
                 onTap: () => _showPageViewPicker(context, ref, settings.defaultPageView),
               ),
               _SettingsTile(
-                icon: Icons.compress_rounded,
                 title: 'Default compression',
-                subtitle: _compressionLabel(settings.defaultCompression),
+                value: _compressionLabel(settings.defaultCompression),
                 onTap: () => _showCompressionPicker(context, ref, settings.defaultCompression),
               ),
               _SettingsTile(
-                icon: Icons.language_rounded,
                 title: 'App language',
-                subtitle: 'English (device default)',
+                value: 'English',
                 onTap: () => context.showComingSoon('Additional languages'),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.xl),
           _SettingsGroup(
             title: 'About',
             children: [
               _SettingsTile(
-                icon: Icons.star_rounded,
-                title: 'Rate PDFverse',
-                subtitle: 'Let us know how we are doing',
+                title: 'Rate PDFHarbor',
                 onTap: () => _openUrl(
                   context,
-                  'https://play.google.com/store/apps/details?id=com.pdfverse.app',
+                  'https://play.google.com/store/apps/details?id=np.com.sachinmaharzan.pdfharbor',
                 ),
               ),
               _SettingsTile(
-                icon: Icons.privacy_tip_rounded,
                 title: 'Privacy Policy',
-                onTap: () => _openUrl(context, 'https://pdfverse.app/privacy'),
+                onTap: () => _openUrl(
+                  context,
+                  'https://sachinmaharzan.com.np/pdfharbor/privacy-policy.html',
+                ),
               ),
               _SettingsTile(
-                icon: Icons.info_rounded,
-                title: 'Version',
-                subtitle: packageInfo.maybeWhen(
-                  data: (info) => '${info.version} (${info.buildNumber})',
+                title: 'About PDFHarbor',
+                value: packageInfo.maybeWhen(
+                  data: (info) => 'Version ${info.version}',
                   orElse: () => 'Loading…',
                 ),
               ),
@@ -175,43 +173,72 @@ class _SettingsGroup extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.sm, AppSpacing.sm, 0, AppSpacing.md),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.xs, AppSpacing.sm, 0, AppSpacing.md),
           child: Text(
             title,
-            style: context.textTheme.labelLarge?.copyWith(
-              color: context.colorScheme.primary,
-              fontWeight: FontWeight.w700,
-            ),
+            style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
           ),
         ),
-        AppCard(padding: EdgeInsets.zero, child: Column(children: children)),
+        AppCard(
+          padding: EdgeInsets.zero,
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          child: Column(
+            children: [
+              for (final (index, child) in children.indexed) ...[
+                if (index > 0) const Divider(indent: AppSpacing.lg, endIndent: AppSpacing.lg),
+                child,
+              ],
+            ],
+          ),
+        ),
       ],
     );
   }
 }
 
+/// One settings row: label on the left, current value in muted text on the
+/// right, chevron only when the row actually opens something.
 class _SettingsTile extends StatelessWidget {
   const _SettingsTile({
-    required this.icon,
     required this.title,
-    this.subtitle,
+    this.value,
     this.onTap,
   });
 
-  final IconData icon;
   final String title;
-  final String? subtitle;
+  final String? value;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(icon, color: context.colorScheme.onSurfaceVariant),
-      title: Text(title, style: context.textTheme.bodyLarge),
-      subtitle: subtitle != null ? Text(subtitle!) : null,
-      trailing: onTap != null ? const Icon(Icons.chevron_right_rounded) : null,
+    final scheme = context.colorScheme;
+    return InkWell(
       onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xs),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.lg,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              ),
+            ),
+            if (value case final label?)
+              Text(
+                label,
+                style: context.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+              ),
+            if (onTap != null) ...[
+              const SizedBox(width: AppSpacing.xs),
+              Icon(Icons.chevron_right_rounded, size: 20, color: scheme.onSurfaceVariant),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

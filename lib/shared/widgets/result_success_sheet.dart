@@ -46,8 +46,8 @@ class ResultSuccessSheet extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
             Text(
               isSingle
-                  ? 'Saved to Documents/PDFverse'
-                  : '${filePaths.length} files saved to Documents/PDFverse',
+                  ? 'Saved to Documents/PDFHarbor'
+                  : '${filePaths.length} files saved to Documents/PDFHarbor',
               style: context.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),

@@ -23,10 +23,24 @@ class SectionHeader extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+            style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
         ),
-        if (actionLabel case final label?) TextButton(onPressed: onActionTap, child: Text(label)),
+        if (actionLabel case final label?)
+          GestureDetector(
+            onTap: onActionTap,
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              child: Text(
+                label,
+                style: context.textTheme.labelMedium?.copyWith(
+                  color: context.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

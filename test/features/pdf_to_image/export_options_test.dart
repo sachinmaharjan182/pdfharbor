@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pdfverse/features/pdf_to_image/domain/entities/export_options.dart';
+import 'package:pdfharbor/features/pdf_to_image/domain/entities/export_options.dart';
 
 void main() {
   group('ImageExportFormat', () {

@@ -1,15 +1,21 @@
 /// Static, cross-feature constants. Feature-specific constants belong in
 /// that feature's own folder instead of here.
 abstract final class AppConstants {
-  static const String appName = 'PDFverse';
+  static const String appName = 'PDFHarbor';
 }
 
-/// Corner radii used across cards, sheets, and dialogs (spec calls for 20-28).
+/// Corner radii used across cards, sheets, and dialogs.
+///
+/// Tuned to the product design: icon tiles and inputs sit at 12-16, cards
+/// and buttons at 16-20, and only sheets go fully soft at 28.
 abstract final class AppRadius {
   static const double small = 12;
-  static const double medium = 20;
-  static const double large = 24;
+  static const double medium = 16;
+  static const double large = 20;
   static const double extraLarge = 28;
+
+  /// Fully rounded — chips, pills, and avatar-sized buttons.
+  static const double pill = 999;
 }
 
 /// Spacing scale used instead of magic numbers in layout code.

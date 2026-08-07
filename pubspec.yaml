@@ -1,5 +1,5 @@
-name: pdfverse
-description: "PDFverse — a premium, all-in-one PDF toolkit for Android."
+name: pdfharbor
+description: "PDFHarbor — a premium, all-in-one PDF toolkit for Android."
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -79,3 +79,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    # Same source the Android launcher icons are generated from — one file,
+    # so the in-app mark can never drift from the launcher icon.
+    - images/app_logo.png

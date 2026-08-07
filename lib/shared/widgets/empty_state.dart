@@ -30,15 +30,17 @@ class EmptyState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(AppSpacing.xxl),
+              width: 76,
+              height: 76,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: scheme.secondaryContainer.withValues(alpha: 0.5),
-                shape: BoxShape.circle,
+                color: scheme.secondaryContainer,
+                borderRadius: BorderRadius.circular(AppRadius.large),
               ),
-              child: Icon(icon, size: 56, color: scheme.onSecondaryContainer),
+              child: Icon(icon, size: 34, color: scheme.primary),
             ),
-            const SizedBox(height: AppSpacing.xxl),
-            Text(title, style: context.textTheme.titleLarge, textAlign: TextAlign.center),
+            const SizedBox(height: AppSpacing.xl),
+            Text(title, style: context.textTheme.titleMedium, textAlign: TextAlign.center),
             if (message case final msg?) ...[
               const SizedBox(height: AppSpacing.sm),
               Text(

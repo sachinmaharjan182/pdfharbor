@@ -1,6 +1,6 @@
 You are an expert Flutter developer, UX designer, and software architect.
 
-Build a production-ready Android application called "PDFverse".
+Build a production-ready Android application called "PDFHarbor".
 
 The goal is to create a premium-quality PDF utility app similar to Adobe Acrobat, iLovePDF, Smallpdf, and Xodo, but with a much cleaner, modern Material 3 interface.
 

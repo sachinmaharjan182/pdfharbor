@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.pdfverse.app"
+    namespace = "np.com.sachinmaharzan.pdfharbor"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.pdfverse.app"
+        applicationId = "np.com.sachinmaharzan.pdfharbor"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

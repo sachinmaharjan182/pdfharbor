@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pdfverse/features/signature/domain/entities/saved_signature.dart';
+import 'package:pdfharbor/features/signature/domain/entities/saved_signature.dart';
 
 void main() {
   group('SignaturePlacement', () {

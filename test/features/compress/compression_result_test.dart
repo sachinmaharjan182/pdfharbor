@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pdfverse/features/compress/domain/entities/compression_preset.dart';
-import 'package:pdfverse/features/compress/domain/entities/compression_result.dart';
+import 'package:pdfharbor/features/compress/domain/entities/compression_preset.dart';
+import 'package:pdfharbor/features/compress/domain/entities/compression_result.dart';
 
 void main() {
   group('CompressionResult', () {

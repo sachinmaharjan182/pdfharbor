@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pdfverse/features/watermark/domain/entities/watermark_config.dart';
+import 'package:pdfharbor/features/watermark/domain/entities/watermark_config.dart';
 
 void main() {
   group('WatermarkConfig', () {

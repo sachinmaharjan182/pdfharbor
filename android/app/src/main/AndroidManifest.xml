@@ -3,8 +3,12 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <!-- No READ_MEDIA_IMAGES / READ_MEDIA_VIDEO on purpose. Play policy only
+         allows those on API 33+ when the system pickers can't deliver core
+         functionality, and ours can: image picking goes through the Android
+         Photo Picker, which grants per-item access with no permission at all.
+         The opt-in lives in main.dart (ImagePickerAndroid.useAndroidPhotoPicker);
+         without it image_picker silently falls back to ACTION_GET_CONTENT. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- Lets the File Manager feature list PDFs anywhere on device storage,
          not just files the app created. Legitimate under Play policy for
@@ -19,9 +23,10 @@
         android:required="false" />
 
     <application
-        android:label="pdfverse"
+        android:label="PDFHarbor"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round">
         <activity
             android:name=".MainActivity"
             android:exported="true"

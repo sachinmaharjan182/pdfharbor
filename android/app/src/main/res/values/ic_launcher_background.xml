@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Backdrop behind the adaptive icon's foreground. White keeps the
+         logo's own blue rounded square as the shape the user sees. -->
+    <color name="ic_launcher_background">#FFFFFFFF</color>
+</resources>

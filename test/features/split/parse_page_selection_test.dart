@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pdfverse/features/split/domain/usecases/parse_page_selection.dart';
+import 'package:pdfharbor/features/split/domain/usecases/parse_page_selection.dart';
 
 void main() {
   group('parsePageSelection', () {

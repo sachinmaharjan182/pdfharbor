@@ -4,6 +4,7 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/utils/context_extensions.dart';
 import '../../../../core/utils/date_time_extension.dart';
 import '../../../../core/utils/file_size_extension.dart';
+import '../../../../shared/theme/app_palette.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../domain/entities/pdf_file_entry.dart';
 import 'pdf_thumbnail.dart';
@@ -39,16 +40,17 @@ class PdfFileListTile extends StatelessWidget {
     return AppCard(
       onTap: onTap,
       padding: const EdgeInsets.all(AppSpacing.md),
+      borderRadius: BorderRadius.circular(AppRadius.medium),
       child: Row(
         children: [
           PdfThumbnail(
             path: entry.path,
-            width: 48,
-            height: 60,
+            width: 40,
+            height: 48,
             borderRadius: BorderRadius.circular(AppRadius.small),
             heroTag: heroTag,
           ),
-          const SizedBox(width: AppSpacing.lg),
+          const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +62,7 @@ class PdfFileListTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: context.textTheme.titleSmall,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   '${entry.sizeBytes.readableFileSize} • $dateLabel',
                   style: context.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
@@ -69,14 +71,18 @@ class PdfFileListTile extends StatelessWidget {
             ),
           ),
           IconButton(
+            visualDensity: VisualDensity.compact,
+            iconSize: 20,
             icon: Icon(
-              entry.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-              color: entry.isFavorite ? scheme.error : scheme.onSurfaceVariant,
+              entry.isFavorite ? Icons.star_rounded : Icons.star_border_rounded,
+              // Favourites are amber everywhere in the product, in both
+              // themes — it reads as a rating mark, not as a brand color.
+              color: entry.isFavorite ? AppAccents.amber : scheme.onSurfaceVariant,
             ),
             onPressed: onFavoriteToggle,
           ),
           PopupMenuButton<PdfFileAction>(
-            icon: Icon(Icons.more_vert_rounded, color: scheme.onSurfaceVariant),
+            icon: Icon(Icons.more_vert_rounded, size: 20, color: scheme.onSurfaceVariant),
             onSelected: onAction,
             itemBuilder: (context) => const [
               PopupMenuItem(

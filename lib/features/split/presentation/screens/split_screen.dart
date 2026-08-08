@@ -10,6 +10,7 @@ import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/result_success_sheet.dart';
+import '../../../../shared/widgets/selection_mark.dart';
 import '../../../files/presentation/providers/files_providers.dart';
 import '../../../files/presentation/widgets/pdf_thumbnail.dart';
 import '../../domain/entities/split_mode.dart';
@@ -150,26 +151,22 @@ class _SplitScreenState extends ConsumerState<SplitScreen> {
   }
 
   Widget _buildModeTile(SplitMode mode, int pageCount) {
+    final scheme = context.colorScheme;
     final isSelected = _mode == mode;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: AppCard(
-        color: isSelected
-            ? context.colorScheme.secondaryContainer
-            : context.colorScheme.surfaceContainerHigh,
+        color: isSelected ? scheme.secondaryContainer : scheme.surfaceContainerHigh,
+        borderColor: isSelected ? scheme.primary : null,
+        borderRadius: BorderRadius.circular(AppRadius.medium),
         padding: EdgeInsets.zero,
         onTap: _isSplitting ? null : () => setState(() => _mode = mode),
         child: Column(
           children: [
             ListTile(
-              leading: Icon(
-                isSelected
-                    ? Icons.radio_button_checked_rounded
-                    : Icons.radio_button_unchecked_rounded,
-                color: isSelected ? context.colorScheme.primary : null,
-              ),
               title: Text(mode.label),
               subtitle: Text(mode.description),
+              trailing: SelectionMark(isSelected: isSelected),
             ),
             if (isSelected && mode == SplitMode.pageRange)
               _buildRangeInputs(pageCount)

@@ -31,6 +31,7 @@ class PdfFileGridCard extends StatelessWidget {
       child: AppCard(
         onTap: onTap,
         padding: const EdgeInsets.all(AppSpacing.md),
+        borderRadius: BorderRadius.circular(AppRadius.medium),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -89,7 +90,7 @@ class _FavoriteBadge extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(6),
           child: Icon(
-            isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+            isFavorite ? Icons.star_rounded : Icons.star_border_rounded,
             color: Colors.white,
             size: 16,
           ),

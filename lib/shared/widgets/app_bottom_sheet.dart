@@ -12,6 +12,9 @@ Future<T?> showAppBottomSheet<T>(
     context: context,
     isScrollControlled: isScrollControlled,
     useSafeArea: true,
+    // Root navigator, so the sheet covers the shell's bottom bar and its
+    // docked action button instead of being painted over by them.
+    useRootNavigator: true,
     builder: builder,
   );
 }

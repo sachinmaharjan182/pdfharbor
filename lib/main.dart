@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker_android/image_picker_android.dart';
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 
 import 'core/constants/app_constants.dart';
 import 'core/hive/hive_service.dart';
@@ -9,8 +11,23 @@ import 'shared/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  _useAndroidPhotoPicker();
   await HiveService.init();
   runApp(const ProviderScope(child: PdfHarborApp()));
+}
+
+/// Routes gallery picking through the Android Photo Picker.
+///
+/// `useAndroidPhotoPicker` still defaults to false in image_picker_android, and
+/// when it is off the plugin launches `ACTION_GET_CONTENT` instead — which is
+/// what got the app rejected, since Play requires system pickers unless they
+/// can't cover core functionality. Keep this in place: dropping it silently
+/// reintroduces the violation with no compile-time signal.
+void _useAndroidPhotoPicker() {
+  final picker = ImagePickerPlatform.instance;
+  if (picker is ImagePickerAndroid) {
+    picker.useAndroidPhotoPicker = true;
+  }
 }
 
 class PdfHarborApp extends ConsumerWidget {

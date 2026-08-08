@@ -84,6 +84,10 @@ abstract final class AppTheme {
       colorScheme: scheme,
       useMaterial3: true,
       brightness: scheme.brightness,
+      // Set on the base rather than only on `textTheme` so it also reaches
+      // `primaryTextTheme` and the widgets that build styles from scratch
+      // instead of inheriting from the text theme.
+      fontFamily: _fontFamily,
     );
     final textTheme = _buildTextTheme(base.textTheme);
     final isLight = scheme.brightness == Brightness.light;
@@ -344,6 +348,10 @@ abstract final class AppTheme {
       labelSmall: _scale(base.labelSmall)?.copyWith(fontWeight: FontWeight.w600),
     );
   }
+
+  /// Must match the `family:` declared under `fonts:` in pubspec.yaml — a
+  /// mismatch is not an error, it just silently falls back to Roboto.
+  static const String _fontFamily = 'Poppins';
 
   static const double _fontSizeFactor = 1.05;
 

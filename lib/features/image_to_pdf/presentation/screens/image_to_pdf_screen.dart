@@ -6,7 +6,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/permissions/permission_service.dart';
 import '../../../../core/utils/context_extensions.dart';
 import '../../../../shared/widgets/app_bottom_sheet.dart';
 import '../../../../shared/widgets/empty_state.dart';
@@ -252,20 +251,8 @@ class _ImageToPdfScreenState extends ConsumerState<ImageToPdfScreen> {
   }
 
   Future<void> _pickImages() async {
-    final permission = await ref.read(permissionServiceProvider).requestPhotos();
-    if (!mounted) return;
-    if (permission == AppPermissionResult.permanentlyDenied) {
-      context.showSnackBar(
-        'Photo access is blocked. Enable it in Settings.',
-        isError: true,
-        action: SnackBarAction(
-          label: 'Settings',
-          onPressed: () => ref.read(permissionServiceProvider).openSettings(),
-        ),
-      );
-      return;
-    }
-
+    // No permission gate: the Android Photo Picker grants access to just the
+    // items the user selects, so there is nothing to request or be denied.
     final picked = await ImagePicker().pickMultiImage();
     if (picked.isEmpty) return;
     ref.read(imageSelectionProvider.notifier).addPaths(picked.map((x) => x.path));

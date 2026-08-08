@@ -2,7 +2,7 @@ name: pdfharbor
 description: "PDFHarbor — a premium, all-in-one PDF toolkit for Android."
 publish_to: 'none'
 
-version: 1.0.1+010001
+version: 1.0.3+010003
 
 environment:
   sdk: ^3.11.5
@@ -35,6 +35,10 @@ dependencies:
 
   # Images
   image_picker: ^1.1.2
+  # Direct deps only so main.dart can flip on the Android Photo Picker; both
+  # would otherwise come in transitively via image_picker.
+  image_picker_android: ^0.8.13+17
+  image_picker_platform_interface: ^2.11.1
   image_cropper: ^8.1.0
   image: ^4.3.0
 
@@ -84,3 +88,21 @@ flutter:
     # Same source the Android launcher icons are generated from — one file,
     # so the in-app mark can never drift from the launcher icon.
     - images/app_logo.png
+
+  # Bundled rather than fetched via google_fonts: the app works offline, and a
+  # runtime download would leave the first launch rendering in Roboto.
+  # Only the weights the type ramp actually asks for are shipped; Flutter fakes
+  # any missing weight by synthesising it, which looks visibly wrong at w800.
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Poppins-ExtraBold.ttf
+          weight: 800

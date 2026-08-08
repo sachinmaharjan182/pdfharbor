@@ -2,6 +2,11 @@
 
 Generated 7 August 2026 for PDFHarbor 1.0.0 (`np.com.sachinmaharzan.pdfharbor`).
 
+Screenshots regenerated 8 August 2026 for 1.0.3, when the app's typeface
+changed from the Material default to Poppins — the old captures showed Roboto
+throughout. The icon and feature graphic were **not** regenerated: neither
+contains app UI text, so the font change does not affect them.
+
 | File | Play Console field | Spec |
 |---|---|---|
 | `play-icon-512.png` | App icon | 512×512, 32-bit PNG, no alpha |
@@ -61,10 +66,39 @@ notes) or write your own — nothing here depends on the exact content.
 
 ## Regenerating
 
-The screenshots are not scripted end to end — capture involves driving the UI
-by hand. The compositing step is scripted and re-runnable given fresh
+The screenshots are not scripted end to end — capture involves driving the UI.
+The compositing step is `compose-screenshots.sh`, re-runnable given fresh
 `1440×3120` captures named `home.png`, `recent.png`, `viewer.png`, `split.png`,
-`tools.png`.
+`tools.png`:
+
+```bash
+./compose-screenshots.sh /path/to/raw-captures
+```
+
+Every geometry constant in that script was measured off the 7 August originals
+(panel 740×1418 at 202,418, radius 24; gradient `#4270FF`→`#1B39B5`; captions
+DejaVu Sans Bold 54). The drop shadow was fitted numerically against
+`01-home.png`. Re-running reproduces the frame to within ~1/255 per pixel, so
+only the app content inside the panel changes between versions.
+
+The caption font is deliberately **not** Poppins. Captions are store chrome
+rather than app UI, and they were left as they were so the listing's look did
+not shift beyond the screenshots themselves.
+
+### Capturing
+
+Order matters. The Recent list sorts by last-opened and re-sorts after every
+open, so to reproduce the original ordering (Travel Itinerary, Lease Agreement,
+Quarterly Report) open them in **reverse**: Quarterly Report, then Lease
+Agreement, then Travel Itinerary. Verify with a screenshot between taps — fixed
+tap coordinates go stale as soon as the list re-orders.
+
+Before capturing anything, turn on Do Not Disturb
+(`adb shell cmd notification set_dnd on`). A heads-up notification banner sits
+*below* the 150px status-bar crop and will land in the shot otherwise.
+
+Capture the Files tab on the **Recent** filter only. The "All" tab lists every
+PDF on the device, including personal documents.
 
 ## Still to do before publishing
 

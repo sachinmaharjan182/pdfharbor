@@ -11,14 +11,9 @@ class PermissionService {
 
   Future<AppPermissionResult> requestCamera() => _request(Permission.camera);
 
-  /// Photo/media access for picking images (Android 13+ uses the granular
-  /// `photos` permission; older Android falls back to `storage`).
-  Future<AppPermissionResult> requestPhotos() async {
-    final sdkPermission = Permission.photos;
-    final result = await _request(sdkPermission);
-    if (result != AppPermissionResult.denied) return result;
-    return _request(Permission.storage);
-  }
+  // Deliberately no photo permission request. Image picking uses the Android
+  // Photo Picker, which returns per-item access without any runtime permission;
+  // asking for READ_MEDIA_IMAGES on top of it is a Play policy violation.
 
   /// Broad storage access so the File Manager feature can list PDFs across
   /// the device, not just files the app itself created. Falls back to a
